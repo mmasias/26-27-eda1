@@ -20,6 +20,7 @@ class Cliente{
 public class reto001{
     static int ultimoPuesto = 0;
     static Cliente[] listaClientes = new Cliente [30];
+    static int clientesAtendidos = 0;
     
     public static void main(String[] args){    
 
@@ -72,6 +73,7 @@ public class reto001{
                 }
 
                 ultimoPuesto = ultimoPuesto - 1;
+                clientesAtendidos = clientesAtendidos + 1;
             }                
         }
     }
@@ -84,6 +86,6 @@ public class reto001{
                 System.out.print("[" + listaClientes[x].getProductos() + "]");
             }
         }
-        System.out.println("\nMinuto: " + minutos);
+        System.out.println("\nMinuto: " + minutos + "\nClientes atendidos: " + clientesAtendidos);
     }
 }
