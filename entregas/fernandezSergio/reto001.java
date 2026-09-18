@@ -68,7 +68,7 @@ public class reto001{
             System.out.print("[ ]");
 
             }else{
-                System.out.print("[" + listaClientes[i].getProductos() + ", " + listaClientes[i].getMinutosEsperando() + "]");
+                System.out.print("[" + listaClientes[i].getProductos() + "]");
             }
         }
         System.out.println("\nMinuto: " + minutos);
