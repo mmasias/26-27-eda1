@@ -61,19 +61,7 @@ public class reto001{
         scanner.close();
         System.out.println("El supermercado ha cerrado.");
     }
-
-    public static void dibujarCola(int minutos){
-        for(int i = 0; i <= listaClientes.length - 1; i++){
-            if(listaClientes[i] == null){
-            System.out.print("[ ]");
-
-            }else{
-                System.out.print("[" + listaClientes[i].getProductos() + "]");
-            }
-        }
-        System.out.println("\nMinuto: " + minutos);
-    }    
-    
+  
     public static void generarClientes(double clienteNuevo, double PROBABILIDAD_CLIENTE, int cantidadProductos){
         if (ultimoPuesto  <= listaClientes.length - 1){
             clienteNuevo = Math.random();
@@ -110,6 +98,18 @@ public class reto001{
             listaClientes[i].espera();
         }
     }
+
+    public static void dibujarCola(int minutos){
+        for(int i = 0; i <= listaClientes.length - 1; i++){
+            if(listaClientes[i] == null){
+            System.out.print("[ ]");
+
+            }else{
+                System.out.print("[" + listaClientes[i].getProductos() + "]");
+            }
+        }
+        System.out.println("\nMinuto: " + minutos);
+    }  
 
     public static void aburridometro(){
         for(int i = 1; i <= ultimoPuesto - 1; i++){
