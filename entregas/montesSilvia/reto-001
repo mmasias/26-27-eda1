@@ -1,0 +1,270 @@
+import java.util.*;
+
+
+public class ColaCCCFSimulacion {
+    static final int DURACION_MINUTOS = 2 * 60;
+    static final double PROB_LLEGADA = 0.6;     
+    static final double PROB_APERTURA_CAJA = 0.4; 
+    static final int MAX_LONGITUD_FILA = 30; 
+    static final int UMBRAL_MENSAJE = 25;
+    static final int LIMITE_ABURRIR = 8;     
+    static final int PERIODO_CHECK_ABURRIR = 5; 
+    static final double PROB_ABURRIR = 0.30; 
+    static final int CADA_15_MIN = 15;
+    static final int MINUTO_INICIO_EXTRA = 20;
+    static final double PROB_LLEGADA_PREFERENTE = 0.15;
+
+    
+    enum Preferencia { EMBARAZO, TERCERA_EDAD, DISCAPACIDAD }
+
+    
+    static final double PROB_COLARSE = 0.10;
+    static final double PROB_ENTREGA_COMPRAS = 0.12;
+
+    static final double PROB_DESISTIR_SI_FILA_LARGA = 0.5;
+
+   
+    static final double PROB_TENER_CONOCIDO = 0.4;
+
+   
+    static class Persona {
+        final int id;
+        final int tiempoLlegada;
+        final boolean preferente;
+        final Preferencia tipoPreferencia; 
+
+        Persona(int id, int tiempoLlegada, boolean preferente, Preferencia tipoPreferencia) {
+            this.id = id;
+            this.tiempoLlegada = tiempoLlegada;
+            this.preferente = preferente;
+            this.tipoPreferencia = tipoPreferencia;
+        }
+
+        int tiempoEnFila(int tiempoActual) {
+            return tiempoActual - tiempoLlegada;
+        }
+
+        @Override
+        public String toString() {
+            return "P#" + id + (preferente ? "(" + tipoPreferencia + ")" : "");
+        }
+    }
+
+    public static void main(String[] args) {
+        SimulacionResult result = simular();
+        System.out.println();
+        System.out.println("===== RESULTADOS =====");
+        System.out.println("Personas atendidas: " + result.atendidas);
+        System.out.println("Personas en fila al final: " + result.quedaronEnFila);
+    }
+
+    static class SimulacionResult {
+        int atendidas;
+        int quedaronEnFila;
+    }
+
+    public static SimulacionResult simular() {
+        Random rnd = ThreadLocalRandom.current();
+
+        Deque<Persona> fila = new ArrayDeque<>();
+        int idGen = 1;
+
+      
+        int atendidas = 0;
+
+        
+        for (int minuto = 1; minuto <= DURACION_MINUTOS; minuto++) {
+
+            
+            boolean abreCaja = rnd.nextDouble() < PROB_APERTURA_CAJA;
+            if (abreCaja && !fila.isEmpty()) {
+                fila.removeFirst();
+                atendidas++;
+            }
+            boolean hayLlegada = rnd.nextDouble() < PROB_LLEGADA;
+            if (hayLlegada) {
+
+               
+                if (minuto >= MINUTO_INICIO_EXTRA) {
+                    boolean intentoColarse = rnd.nextDouble() < PROB_COLARSE;
+
+                    
+                    if (intentoColarse && !fila.isEmpty() && rnd.nextDouble() < PROB_TENER_CONOCIDO) {
+                        
+                        int idx = rnd.nextInt(fila.size());
+                        Persona conocido = getPersonaEnIndex(fila, idx);
+                        Persona nueva = generarPersona(minuto, idGen++, rnd, true);
+
+                        
+                        insertarDespuesDeConocido(fila, conocido, nueva, rnd);
+                    } else {
+                        
+                        Persona nueva = generarPersona(minuto, idGen++, rnd, false);
+
+                        
+                        if (nueva.preferente) {
+                            insertarPreferente(fila, nueva, rnd);
+                        } else {
+                            insertarNormal(fila, nueva, rnd);
+                        }
+                    }
+
+                } else {
+                    
+                    Persona nueva = generarPersona(minuto, idGen++, rnd, false);
+                    insertarNormal(fila, nueva, rnd);
+                }
+            }
+
+            
+            if (minuto >= MINUTO_INICIO_EXTRA && minuto % PERIODO_CHECK_ABURRIR == 0) {
+                aplicarAburrimiento(fila, minuto, rnd);
+            }
+
+            
+            if (minuto >= MINUTO_INICIO_EXTRA && !fila.isEmpty()) {
+                if (rnd.nextDouble() < PROB_ENTREGA_COMPRAS) {
+                   
+                    int n = fila.size();
+                    int donanteIdx = rnd.nextInt(n);
+                    int receptorIdx = rnd.nextInt(n);
+                    while (receptorIdx == donanteIdx && n > 1) receptorIdx = rnd.nextInt(n);
+                    
+            }
+
+            
+            if (minuto % CADA_15_MIN == 0 && fila.size() > UMBRAL_MENSAJE) {
+                System.out.println(" Min " + minuto + ": 'pasen por esta caja en orden de fila' (fila=" + fila.size() + ")");
+            }
+
+             
+            System.out.println(" Min " + minuto + " -> longitud fila: " + fila.size() + " m");
+        }
+
+        SimulacionResult r = new SimulacionResult();
+        r.atendidas = atendidas;
+        r.quedaronEnFila = fila.size();
+        return r;
+    }
+
+    
+    static Persona generarPersona(int minuto, int id, Random rnd, boolean forzarPreferenteEnColada) {
+        
+        boolean preferente = false;
+        Preferencia prefTipo = null;
+
+        double probPref = forzarPreferenteEnColada ? PROB_LLEGADA_PREFERENTE : PROB_LLEGADA_PREFERENTE;
+        if (rnd.nextDouble() < probPref) {
+            preferente = true;
+            prefTipo = Preferencia.values()[rnd.nextInt(Preferencia.values().length)];
+        }
+
+        return new Persona(id, minuto, preferente, prefTipo);
+    }
+
+    
+    static void insertarNormal(Deque<Persona> fila, Persona p, Random rnd) {
+        if (fila.size() >= MAX_LONGITUD_FILA) {
+            
+            if (rnd.nextDouble() < PROB_DESISTIR_SI_FILA_LARGA) return;
+          
+            return;
+        }
+        fila.addLast(p);
+    }
+
+    static void insertarPreferente(Deque<Persona> fila, Persona p, Random rnd) {
+        
+        if (fila.size() >= MAX_LONGITUD_FILA) {
+            if (rnd.nextDouble() < PROB_DESISTIR_SI_FILA_LARGA) return;
+            return;
+        }
+
+        int posUltimoMismoTipo = -1;
+        int idx = 0;
+        for (Persona x : fila) {
+            if (x.preferente && x.tipoPreferencia == p.tipoPreferencia) {
+                posUltimoMismoTipo = idx;
+            }
+            idx++;
+        }
+
+        if (posUltimoMismoTipo == -1) {
+            
+            fila.addFirst(p);
+        } else {
+            
+            insertarEnIndex(fila, posUltimoMismoTipo + 1, p);
+        }
+    }
+
+    static void insertarDespuesDeConocido(Deque<Persona> fila, Persona conocido, Persona nueva, Random rnd) {
+        if (fila.size() >= MAX_LONGITUD_FILA) {
+            if (rnd.nextDouble() < PROB_DESISTIR_SI_FILA_LARGA) return;
+            return;
+        }
+
+        int posConocido = 0;
+        boolean found = false;
+
+        
+        List<Persona> tmp = new ArrayList<>(fila);
+        for (int i = 0; i < tmp.size(); i++) {
+            if (tmp.get(i).id == conocido.id) {
+                posConocido = i;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            
+            fila.addLast(nueva);
+            return;
+        }
+
+        int insertPos = posConocido + 1;
+
+        tmp.add(insertPos, nueva);
+        fila.clear();
+        fila.addAll(tmp);
+    }
+
+    static void insertarEnIndex(Deque<Persona> fila, int index, Persona p) {
+       
+        List<Persona> tmp = new ArrayList<>(fila);
+        if (index < 0) index = 0;
+        if (index > tmp.size()) index = tmp.size();
+        tmp.add(index, p);
+        fila.clear();
+        fila.addAll(tmp);
+    }
+
+    static Persona getPersonaEnIndex(Deque<Persona> fila, int index) {
+        int i = 0;
+        for (Persona p : fila) {
+            if (i == index) return p;
+            i++;
+        }
+        throw new IllegalArgumentException("Index fuera de rango");
+    }
+
+    
+    static void aplicarAburrimiento(Deque<Persona> fila, int minutoActual, Random rnd) {
+
+        List<Persona> tmp = new ArrayList<>(fila);
+        List<Persona> nuevaFila = new ArrayList<>();
+
+        for (Persona p : tmp) {
+            int tiempoEn = p.tiempoEnFila(minutoActual);
+            boolean cumple = tiempoEn > LIMITE_ABURRIR;
+            if (cumple && rnd.nextDouble() < PROB_ABURRIR) {
+               
+            } else {
+                nuevaFila.add(p);
+            }
+        }
+
+        fila.clear();
+        fila.addAll(nuevaFila);
+    }
+}
