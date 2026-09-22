@@ -1,0 +1,644 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class SimulacionCCCF {
+
+    static class Persona {
+
+        private int numero;
+        private int minutoLlegada;
+        private boolean preferente;
+
+        private Persona anterior;
+        private Persona siguiente;
+
+        public Persona(int numero, int minutoLlegada, boolean preferente) {
+            this.numero = numero;
+            this.minutoLlegada = minutoLlegada;
+            this.preferente = preferente;
+            this.anterior = null;
+            this.siguiente = null;
+        }
+
+        public int getNumero() {
+            return numero;
+        }
+
+        public int getMinutoLlegada() {
+            return minutoLlegada;
+        }
+
+        public boolean esPreferente() {
+            return preferente;
+        }
+
+        public Persona getAnterior() {
+            return anterior;
+        }
+
+        public Persona getSiguiente() {
+            return siguiente;
+        }
+
+        public void setAnterior(Persona anterior) {
+            this.anterior = anterior;
+        }
+
+        public void setSiguiente(Persona siguiente) {
+            this.siguiente = siguiente;
+        }
+    }
+
+    static class Fila {
+
+        private Persona primero;
+        private Persona ultimo;
+        private int tamano;
+
+        public Fila() {
+            primero = null;
+            ultimo = null;
+            tamano = 0;
+        }
+
+        public int getTamano() {
+            return tamano;
+        }
+
+        public boolean estaVacia() {
+            return primero == null;
+        }
+
+        public Persona getPrimero() {
+            return primero;
+        }
+
+        public Persona getUltimo() {
+            return ultimo;
+        }
+
+        
+        public void insertarFinal(Persona persona) {
+
+            if (estaVacia()) {
+                primero = persona;
+                ultimo = persona;
+            } else {
+                ultimo.setSiguiente(persona);
+                persona.setAnterior(ultimo);
+                ultimo = persona;
+            }
+
+            tamano++;
+        }
+
+        public void insertarPrincipio(Persona persona) {
+
+            if (estaVacia()) {
+                primero = persona;
+                ultimo = persona;
+            } else {
+                persona.setSiguiente(primero);
+                primero.setAnterior(persona);
+                primero = persona;
+            }
+
+            tamano++;
+        }
+
+        public void insertarDespuesDe(Persona nueva, Persona anterior) {
+
+            if (anterior == null) {
+                insertarPrincipio(nueva);
+                return;
+            }
+
+            Persona siguiente = anterior.getSiguiente();
+
+            nueva.setAnterior(anterior);
+            nueva.setSiguiente(siguiente);
+
+            anterior.setSiguiente(nueva);
+
+            if (siguiente != null) {
+                siguiente.setAnterior(nueva);
+            } else {
+                ultimo = nueva;
+            }
+
+            tamano++;
+        }
+
+        public void eliminar(Persona persona) {
+
+            if (persona == null) {
+                return;
+            }
+
+            Persona anterior = persona.getAnterior();
+            Persona siguiente = persona.getSiguiente();
+
+            if (anterior == null) {
+                primero = siguiente;
+            } else {
+                anterior.setSiguiente(siguiente);
+            }
+
+            if (siguiente == null) {
+                ultimo = anterior;
+            } else {
+                siguiente.setAnterior(anterior);
+            }
+
+            persona.setAnterior(null);
+            persona.setSiguiente(null);
+
+            tamano--;
+        }
+
+        public Persona atenderPrimero() {
+
+            if (estaVacia()) {
+                return null;
+            }
+
+            Persona persona = primero;
+            eliminar(persona);
+
+            return persona;
+        }
+
+        public Persona ultimaPreferente() {
+
+            Persona actual = ultimo;
+
+            while (actual != null) {
+
+                if (actual.esPreferente()) {
+                    return actual;
+                }
+
+                actual = actual.getAnterior();
+            }
+
+            return null;
+        }
+
+        public Persona obtenerPersonaAleatoria(Random random) {
+
+            if (estaVacia()) {
+                return null;
+            }
+
+            int posicion = random.nextInt(tamano);
+
+            Persona actual = primero;
+
+            for (int i = 0; i < posicion; i++) {
+                actual = actual.getSiguiente();
+            }
+
+            return actual;
+        }
+
+        public Persona obtenerPersonaAleatoriaExcepto(
+                Persona personaExcluir, Random random) {
+
+            if (tamano <= 1) {
+                return null;
+            }
+
+            int posicion = random.nextInt(tamano - 1);
+
+            Persona actual = primero;
+
+            while (actual != null) {
+
+                if (actual != personaExcluir) {
+
+                    if (posicion == 0) {
+                        return actual;
+                    }
+
+                    posicion--;
+                }
+
+                actual = actual.getSiguiente();
+            }
+
+            return null;
+        }
+
+        public int contarPersonasConMasDe8Minutos(int minutoActual) {
+
+            int contador = 0;
+
+            Persona actual = primero;
+
+            while (actual != null) {
+
+                if (minutoActual - actual.getMinutoLlegada() > 8) {
+                    contador++;
+                }
+
+                actual = actual.getSiguiente();
+            }
+
+            return contador;
+        }
+
+        public void mostrar() {
+
+            Persona actual = primero;
+
+            System.out.print("FILA: ");
+
+            if (actual == null) {
+                System.out.println("vacía");
+                return;
+            }
+
+            while (actual != null) {
+
+                System.out.print(
+                        "P" + actual.getNumero()
+                                + "(" + actual.getMinutoLlegada() + ")"
+                );
+
+                if (actual.getSiguiente() != null) {
+                    System.out.print(" -> ");
+                }
+
+                actual = actual.getSiguiente();
+            }
+
+            System.out.println();
+        }
+    }
+
+    private static final int DURACION = 240;
+
+    private static final double PROB_LLEGADA = 0.60;
+    private static final double PROB_CAJA = 0.40;
+
+    private static final int MAXIMO_FILA = 30;
+
+    private static final int MINUTO_INICIO_EXTENDIDO = 20;
+
+    private static final int MINUTOS_ABURRIMIENTO = 5;
+    private static final int TIEMPO_MAXIMO_SIN_ATENDER = 8;
+
+    private static final int MINUTOS_MEGA = 15;
+    private static final int LIMITE_MEGA = 25;
+
+    private static int siguienteNumeroPersona = 1;
+
+    private static int atendidas = 0;
+
+    private static int abandonosPorAburrimiento = 0;
+
+    private static int abandonosPorFilaLlena = 0;
+
+    private static int abandonosPorEntregarCompras = 0;
+
+    public static void main {
+
+        Scanner teclado = new Scanner(System.in);
+        Random random = new Random();
+
+        Fila fila = new Fila();
+
+        System.out.println("==============================================");
+        System.out.println("       SIMULACIÓN DEL CCCF");
+        System.out.println("==============================================");
+
+        System.out.println();
+        System.out.println("Probabilidades de los eventos extendidos");
+        System.out.println("(Introduzca un valor entre 0 y 1)");
+        System.out.println();
+
+        double probPreferente =
+                pedirProbabilidad(teclado,
+                        "Probabilidad de que una llegada sea preferente: ");
+
+        double probColarse =
+                pedirProbabilidad(teclado,
+                        "Probabilidad de que una llegada se cuele: ");
+
+        double probEntregarCompras =
+                pedirProbabilidad(teclado,
+                        "Probabilidad de entregar las compras: ");
+
+        System.out.println();
+        System.out.println("Comienza la simulación...");
+        System.out.println();
+
+        for (int minuto = 1; minuto <= DURACION; minuto++) {
+
+            System.out.println("----------------------------------------------");
+            System.out.println("MINUTO " + minuto);
+            System.out.println("----------------------------------------------");
+
+           
+            if (minuto >= MINUTO_INICIO_EXTENDIDO) {
+
+                gestionarAburrimiento(
+                        fila,
+                        minuto,
+                        random
+                );
+            }
+
+            if (random.nextDouble() < PROB_CAJA) {
+
+                Persona atendida = fila.atenderPrimero();
+
+                if (atendida != null) {
+
+                    atendidas++;
+
+                    System.out.println(
+                            "Caja abierta: se atiende a P"
+                                    + atendida.getNumero()
+                    );
+
+                } else {
+
+                    System.out.println(
+                            "Caja abierta, pero la fila está vacía."
+                    );
+                }
+
+            } else {
+
+                System.out.println("No se ha abierto ninguna caja.");
+            }
+
+            if (random.nextDouble() < PROB_LLEGADA) {
+
+                gestionarLlegada(
+                        fila,
+                        minuto,
+                        random,
+                        probPreferente,
+                        probColarse
+                );
+
+            } else {
+
+                System.out.println(
+                        "No ha llegado ninguna persona este minuto."
+                );
+            }
+
+            if (minuto >= MINUTO_INICIO_EXTENDIDO) {
+
+                gestionarEntregaCompras(
+                        fila,
+                        random,
+                        probEntregarCompras
+                );
+            }
+
+            if (minuto % MINUTOS_MEGA == 0
+                    && fila.getTamano() > LIMITE_MEGA) {
+
+                System.out.println();
+                System.out.println("pasen por esta caja en orden de fila"
+                       
+                );
+                System.out.println();
+            }
+
+
+            System.out.println(
+                    "Personas actualmente en fila: "
+                            + fila.getTamano()
+            );
+        }
+
+        System.out.println();
+        System.out.println("==============================================");
+        System.out.println("          RESULTADO FINAL");
+        System.out.println("==============================================");
+
+        System.out.println(
+                "Personas atendidas: "
+                        + atendidas
+        );
+
+        System.out.println(
+                "Personas que quedan en la fila: "
+                        + fila.getTamano()
+        );
+
+        System.out.println(
+                "Abandonos por aburrimiento: "
+                        + abandonosPorAburrimiento
+        );
+
+        System.out.println(
+                "Personas que no entraron por fila llena: "
+                        + abandonosPorFilaLlena
+        );
+
+        System.out.println(
+                "Personas que entregaron sus compras y se fueron: "
+                        + abandonosPorEntregarCompras
+        );
+
+        System.out.println("==============================================");
+
+        teclado.close();
+    }
+
+    private static void gestionarLlegada(
+            Fila fila,
+            int minuto,
+            Random random,
+            double probPreferente,
+            double probColarse) {
+
+        if (fila.getTamano() >= MAXIMO_FILA) {
+
+            abandonosPorFilaLlena++;
+
+            System.out.println(
+                    "Llega una persona, pero la fila tiene "
+                            + MAXIMO_FILA
+                            + " personas. No se incorpora."
+            );
+
+            return;
+        }
+
+
+        boolean preferente =
+                random.nextDouble() < probPreferente;
+
+        Persona nueva =
+                new Persona(
+                        siguienteNumeroPersona,
+                        minuto,
+                        preferente
+                );
+
+        siguienteNumeroPersona++;
+
+        if (!preferente
+                && random.nextDouble() < probColarse
+                && !fila.estaVacia()) {
+
+            Persona conocido =
+                    fila.obtenerPersonaAleatoria(random);
+
+            fila.insertarDespuesDe(nueva, conocido);
+
+            System.out.println(
+                    "P" + nueva.getNumero()
+                            + " se cuela detrás de P"
+                            + conocido.getNumero()
+            );
+
+            return;
+        }
+
+        if (preferente) {
+
+            Persona ultimaPreferente =
+                    fila.ultimaPreferente();
+
+            if (ultimaPreferente == null) {
+
+                fila.insertarPrincipio(nueva);
+
+                System.out.println(
+                        "Llega P" + nueva.getNumero()
+                                + " con atención preferente "
+                                + "y se coloca al frente."
+                );
+
+            } else {
+
+                fila.insertarDespuesDe(
+                        nueva,
+                        ultimaPreferente
+                );
+
+                System.out.println(
+                        "Llega P" + nueva.getNumero()
+                                + " con atención preferente "
+                                + "y se coloca después de P"
+                                + ultimaPreferente.getNumero()
+                );
+            }
+
+            return;
+        }
+
+        fila.insertarFinal(nueva);
+
+        System.out.println(
+                "Llega P" + nueva.getNumero()
+                        + " y se coloca al final."
+        );
+    }
+
+    private static void gestionarAburrimiento(
+            Fila fila,
+            int minuto,
+            Random random) {
+
+        if (minuto % MINUTOS_ABURRIMIENTO != 0) {
+            return;
+        }
+
+        Persona actual = fila.getPrimero();
+
+        while (actual != null) {
+
+            Persona siguiente = actual.getSiguiente();
+
+            int tiempoEnFila =
+                    minuto - actual.getMinutoLlegada();
+
+            if (tiempoEnFila > TIEMPO_MAXIMO_SIN_ATENDER) {
+                if (random.nextDouble() < 0.30) {
+
+                    System.out.println(
+                            "P" + actual.getNumero()
+                                    + " se aburre después de "
+                                    + tiempoEnFila
+                                    + " minutos y abandona la fila."
+                    );
+
+                    fila.eliminar(actual);
+
+                    abandonosPorAburrimiento++;
+                }
+            }
+
+            actual = siguiente;
+        }
+    }
+
+    private static void gestionarEntregaCompras(
+            Fila fila,
+            Random random,
+            double probabilidad) {
+
+        if (fila.getTamano() < 2) {
+            return;
+        }
+
+        if (random.nextDouble() < probabilidad) {
+
+            Persona queEntrega =
+                    fila.obtenerPersonaAleatoria(random);
+
+            Persona queRecibe =
+                    fila.obtenerPersonaAleatoriaExcepto(
+                            queEntrega,
+                            random
+                    );
+
+            if (queEntrega != null && queRecibe != null) {
+
+                System.out.println(
+                        "P" + queEntrega.getNumero()
+                                + " entrega sus compras a P"
+                                + queRecibe.getNumero()
+                                + " y abandona la fila."
+                );
+
+                fila.eliminar(queEntrega);
+
+                abandonosPorEntregarCompras++;
+            }
+        }
+    }
+
+    private static double pedirProbabilidad(
+            Scanner teclado,
+            String mensaje) {
+
+        double probabilidad;
+
+        do {
+
+            System.out.print(mensaje);
+            probabilidad = teclado.nextDouble();
+
+            if (probabilidad < 0 || probabilidad > 1) {
+
+                System.out.println(
+                        "ERROR: la probabilidad debe estar "
+                                + "entre 0 y 1."
+                );
+            }
+
+        } while (probabilidad < 0 || probabilidad > 1);
+
+        return probabilidad;
+    }
+}
