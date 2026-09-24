@@ -1,28 +1,19 @@
 public class Fila {
-
-    private Cliente[] clientes;
+    private Cliente primero;
     private int numeroClientes;
-
-    private int[] estados;
-    private int numeroEstados;
 
     private final double PROBABILIDAD_ABURRIRSE = 0.3;
 
     private Console console;
 
     public Fila() {
-
-        clientes = new Cliente[1000];
-        estados = new int[240];
-
+        primero = null;
         numeroClientes = 0;
-        numeroEstados = 0;
-
         console = new Console();
     }
 
     public Cliente primero() {
-        return clientes[0];
+        return primero;
     }
 
     public boolean hayGente() {
@@ -30,21 +21,30 @@ public class Fila {
     }
 
     public Cliente sacar() {
+        Cliente clienteSacado = primero;
 
-        Cliente clienteSacado = clientes[0];
-
-        for (int i = 0; i < numeroClientes - 1; i++) {
-            clientes[i] = clientes[i + 1];
+        if (primero != null) {
+            primero = primero.obtenerSiguiente();
+            clienteSacado.establecerSiguiente(null);
+            numeroClientes--;
         }
-
-        numeroClientes--;
 
         return clienteSacado;
     }
 
     public void añadirCliente(Cliente cliente) {
+        if (primero == null) {
+            primero = cliente;
+        } else {
+            Cliente actual = primero;
 
-        clientes[numeroClientes] = cliente;
+            while (actual.obtenerSiguiente() != null) {
+                actual = actual.obtenerSiguiente();
+            }
+
+            actual.establecerSiguiente(cliente);
+        }
+
         numeroClientes++;
     }
 
@@ -52,48 +52,47 @@ public class Fila {
         return numeroClientes;
     }
 
-    public void registrarEstado() {
-
-        estados[numeroEstados] = numeroClientes;
-        numeroEstados++;
-    }
-
     public void mostrar() {
-
         console.writeln("FILA:");
 
         if (hayGente()) {
+            Cliente actual = primero;
+            int posicion = 1;
 
-            for (int i = 0; i < numeroClientes; i++) {
-                console.writeln("  Cliente " + (i + 1));
+            while (actual != null) {
+                console.writeln("  Cliente " + posicion);
+                actual = actual.obtenerSiguiente();
+                posicion++;
             }
-
         } else {
             console.writeln("  Vacia");
         }
     }
 
     public void comprobarAburrimiento(int minutoActual) {
+        Cliente actual = primero;
+        Cliente anterior = null;
 
-        int i = 0;
-
-        while (i < numeroClientes) {
-
-            if (clientes[i].minutosEnCola(minutoActual) > 8) {
-
+        while (actual != null) {
+            if (actual.minutosEnCola(minutoActual) > 8) {
                 if (Math.random() < PROBABILIDAD_ABURRIRSE) {
 
-                    for (int j = i; j < numeroClientes - 1; j++) {
-                        clientes[j] = clientes[j + 1];
+                    if (anterior == null) {
+                        primero = actual.obtenerSiguiente();
+                    } else {
+                        anterior.establecerSiguiente(actual.obtenerSiguiente());
                     }
 
+                    actual = actual.obtenerSiguiente();
                     numeroClientes--;
-                } else {
-                    i++;
-                }
 
+                } else {
+                    anterior = actual;
+                    actual = actual.obtenerSiguiente();
+                }
             } else {
-                i++;
+                anterior = actual;
+                actual = actual.obtenerSiguiente();
             }
         }
     }
