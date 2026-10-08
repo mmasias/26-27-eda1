@@ -1,10 +1,26 @@
-package listas.nodoDummy;
+package entregas.bayonMateo;
 
 class ListaEnlazada {
     private Nodo cabeza;
 
     public ListaEnlazada() {
         this.cabeza = null;
+    }
+
+    public void eliminarRepetidos() {
+        if(cabeza == null || cabeza.siguiente == null) {
+            return;
+        }
+
+        Nodo dummy = new Nodo(-1);
+        dummy.siguiente = cabeza;
+
+        Nodo prev = dummy;
+        Nodo curr = cabeza;
+
+        while (curr != null){
+            boolean esDuplicado = false;
+        }
     }
 
     public void imprimirLista() {
