@@ -2,52 +2,32 @@ package entregas.MartinezAdrian;
 
 public class Ejemplo {
     public static void main(String[] args) {
-        System.out.println("== Eliminar por valor (1)");
-        probarEliminar(new int[] { 1, 1, 2, 1, 3 }, 1);
-        probarEliminar(new int[] { 1, 1, 1 }, 1);
-        probarEliminar(new int[] {}, 1);
-
-        System.out.println();
-        System.out.println("== Insertar 9 en posición");
-        probarInsertar(new int[] { 1, 2, 3 }, 0);
-        probarInsertar(new int[] { 1, 2, 3 }, 2);
-        probarInsertar(new int[] { 1, 2, 3 }, 10);
-        probarInsertar(new int[] {}, 0);
+        System.out.println("== Pruebas: eliminarRepetidos (con Dummy) ==");
+        
+        probar(new int[] { 1, 1, 2, 3, 3, 4 });
+        probar(new int[] { 1, 1, 1 });
+        probar(new int[] { 1, 2, 2 });
+        probar(new int[] { 1, 2, 3 });
+        probar(new int[] { 5, 5, 6, 6 });
+        probar(new int[] {});
     }
 
-    static void probarEliminar(int[] datos, int valor) {
+    static void probar(int[] datos) {
         ListaEnlazada conDummy = crear(datos);
         ListaEnlazada sinDummy = crear(datos);
 
-        System.out.print("original:  ");
+        System.out.print("Entrada:    ");
         conDummy.imprimirLista();
 
-        conDummy.eliminarPorValor(valor);
-        sinDummy.eliminarPorValorSinDummy(valor);
+        conDummy.eliminarRepetidos();
+        sinDummy.eliminarRepetidosSinDummy();
 
-        System.out.print("con dummy: ");
+        System.out.print("Con dummy:  ");
         conDummy.imprimirLista();
-        System.out.print("sin dummy: ");
+
+        System.out.print("Sin dummy:  ");
         sinDummy.imprimirLista();
-        System.out.println();
-    }
-
-    static void probarInsertar(int[] datos, int posicion) {
-        ListaEnlazada conDummy = crear(datos);
-        ListaEnlazada sinDummy = crear(datos);
-
-        System.out.print("original:  ");
-        conDummy.imprimirLista();
-        System.out.println("posición:  " + posicion);
-
-        conDummy.insertarEnPosicion(posicion, 9);
-        sinDummy.insertarEnPosicionSinDummy(posicion, 9);
-
-        System.out.print("con dummy: ");
-        conDummy.imprimirLista();
-        System.out.print("sin dummy: ");
-        sinDummy.imprimirLista();
-        System.out.println();
+        System.out.println("----------------------------------------");
     }
 
     static ListaEnlazada crear(int[] datos) {

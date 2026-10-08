@@ -81,4 +81,49 @@ class ListaEnlazada {
             }
         }
     }
+
+    public void eliminarRepetidos() {
+        Nodo dummy = new Nodo(-1);
+        dummy.siguiente = cabeza;
+        Nodo actual = dummy;
+
+        while (actual.siguiente != null && actual.siguiente.siguiente != null) {
+            if (actual.siguiente.dato == actual.siguiente.siguiente.dato) {
+                int valorRepetido = actual.siguiente.dato;
+                while (actual.siguiente != null && actual.siguiente.dato == valorRepetido) {
+                    actual.siguiente = actual.siguiente.siguiente;
+                }
+            } else {
+                actual = actual.siguiente;
+            }
+        }
+
+        cabeza = dummy.siguiente;
+    }
+
+    public void eliminarRepetidosSinDummy() {
+        while (cabeza != null && cabeza.siguiente != null && cabeza.dato == cabeza.siguiente.dato) {
+            int valorRepetido = cabeza.dato;
+
+            while (cabeza != null && cabeza.dato == valorRepetido) {
+                cabeza = cabeza.siguiente;
+            }
+        }
+
+        if (cabeza == null || cabeza.siguiente == null) {
+            return;
+        }
+
+        Nodo actual = cabeza;
+        while (actual.siguiente != null && actual.siguiente.siguiente != null) {
+            if (actual.siguiente.dato == actual.siguiente.siguiente.dato) {
+                int valorRepetido = actual.siguiente.dato;
+                while (actual.siguiente != null && actual.siguiente.dato == valorRepetido) {
+                    actual.siguiente = actual.siguiente.siguiente;
+                }
+            } else {
+                actual = actual.siguiente;
+            }
+        }
+    }
 }
