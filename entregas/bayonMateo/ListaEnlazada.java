@@ -25,7 +25,17 @@ class ListaEnlazada {
                 esDuplicado = true;
                 curr = curr.siguiente;
             }
+
+            if (esDuplicado) {
+                curr = curr.siguiente;
+                prev.siguiente = curr;
+            } else {
+                prev = curr;
+                curr = curr.siguiente;
+            }
         }
+
+        cabeza = dummy.siguiente;
     }
 
     public void imprimirLista() {
