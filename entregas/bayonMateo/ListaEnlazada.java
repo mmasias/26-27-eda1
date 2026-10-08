@@ -20,6 +20,11 @@ class ListaEnlazada {
 
         while (curr != null){
             boolean esDuplicado = false;
+
+            while (curr.siguiente != null && curr.dato == curr.siguiente.dato) {
+                esDuplicado = true;
+                curr = curr.siguiente;
+            }
         }
     }
 
