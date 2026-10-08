@@ -73,6 +73,32 @@ public class ListaEnlazada {
         }
     }
 
+    public static ListaEnlazada fusionar(ListaEnlazada a, ListaEnlazada b) {
+        Nodo dummy = new Nodo(0);
+        Nodo cola = dummy;
+        Nodo pa = a.cabeza;
+        Nodo pb = b.cabeza;
+
+        while (pa != null && pb != null) {
+            if (pa.dato <= pb.dato) {
+                cola.siguiente = pa;
+                pa = pa.siguiente;
+            } else {
+                cola.siguiente = pb;
+                pb = pb.siguiente;
+            }
+            cola = cola.siguiente;
+        }
+        cola.siguiente = (pa != null) ? pa : pb;
+
+        ListaEnlazada resultado = new ListaEnlazada();
+        resultado.cabeza = dummy.siguiente;
+
+        a.cabeza = null;
+        b.cabeza = null;
+        return resultado;
+    }
+
     @Override
     public String toString() {
         if (cabeza == null) {
