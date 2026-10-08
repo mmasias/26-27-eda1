@@ -1,33 +1,18 @@
-# Estructura de datos y algoritmos I
+# Reto 002 - Nodo dummy | Lista Enlazada 
+# Katerine Rafael Bourdierd
 
-Repo de materiales y proyectos de la asignatura **EDA1** del [Grado de Ingeniería Informática](https://www.uneatlantico.es/escuela-politecnica-superior/estudios-grado-oficial-en-ingenieria-informatica) la [Universidad Europea del Atlántico](https://www.uneatlantico.es).
+## Descripción
 
-## Curso *[26][27]*
+Implementación de la estructura `ListaEnlazada` orientada al purgado total de elementos duplicados sobre listas ordenadas ascendentemente. A diferencia de una eliminación convencional, si un valor aparece más de una vez, **se eliminan todas sus ocurrencias** sin conservar copias.
 
-- [Temario](https://github.com/mmasias/eda1/blob/main/temario/README.md)
-  - [A día de hoy, deberíamos saber...](temario/aDiaDeHoy.md)
-    - [Ejercicios](temario/ejercicios/README.md)
-- Evaluaciones
-  - Evaluación continua: [Retos!](evaluaciones/retos/README.md)
-  - Exámenes
-    - Parcial: [Enunciado](evaluaciones/examenes/examenParcial/README.md) | Repositorio de trabajo y entrega.
-    - Final: [Enunciado](evaluaciones/examenes/examenFinal/README.md) | Repositorio de trabajo y entrega.
-    - Extraordinario: [Enunciado](evaluaciones/examenes/examenExtraordinario/README.md) | Repositorio de trabajo y entrega.
+---
 
-> ***NOTA:*** Los repositorios de entrega de exámenes estarán disponible días antes del examen. El repositorio con el enunciado del examen se activa al inicio del examen y permitirá entregas hasta la finalización del mismo.
+## Métodos
 
-## Herramientas et al
+* `eliminarRepetidos()`: Elimina todos los duplicados utilizando la técnica de **nodo dummy**.
+* `eliminarRepetidosSinDummy()`: Elimina todos los duplicados gestionando directamente el puntero `cabeza` sin nodos auxiliares.
+* `insertarAlPrincipio(int dato)`: Inserta un nodo al inicio de la lista.
+* `eliminarAlPrincipio()`: Elimina el primer nodo.
+* `imprimirLista()`: Imprime la lista en formato `dato -> ... -> null`.
 
-- [GIT](https://git-scm.com/) & [GitHub](https://github.com/)
-- [Visual Studio Code](https://code.visualstudio.com/)
-- [PlantText](https://www.planttext.com/), para usar el formato [PlantUML](https://plantuml.com/es/) al realizar diagramas de: [actividades](https://plantuml.com/es/activity-diagram-beta) / [estados](https://plantuml.com/es/state-diagram) / [clases](https://plantuml.com/es/class-diagram) / [objetos](https://plantuml.com/es/object-diagram) / [y otros...](https://plantuml.com/es/sitemap-language-specification)
-- [Google Docs](https://drive.google.com/drive/u/0/my-drive)
-- [Plantillas](/documentos/plantillas.md)
-
-## Bibliografía & enlaces interesantes
-
-NOTA: *Algunos enlaces podrían requerir **credenciales de acceso al campus** o a otros espacios colaborativos.*
-
-- Hoja de asistencia et-al
-- Libro de la asignatura
-- Este repo, versión de ediciones pasadas
+---
