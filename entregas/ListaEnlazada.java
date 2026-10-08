@@ -1,5 +1,5 @@
 public class ListaEnlazada {
-    private Nodo cabeza;   // única referencia que guarda la lista
+    private Nodo cabeza;
 
     public ListaEnlazada() {
         cabeza = null;
@@ -20,6 +20,57 @@ public class ListaEnlazada {
             actual = actual.siguiente;
         }
         actual.siguiente = nuevo;
+    }
+
+    public void eliminarRepetidos() {
+        Nodo dummy = new Nodo(0);
+        dummy.siguiente = cabeza;
+
+        Nodo previo = dummy;
+        Nodo actual = cabeza;
+
+        while (actual != null) {
+            if (actual.siguiente != null && actual.dato == actual.siguiente.dato) {
+                int valor = actual.dato;
+                while (actual != null && actual.dato == valor) {
+                    actual = actual.siguiente;
+                }
+                previo.siguiente = actual;
+            } else {
+                previo = actual;
+                actual = actual.siguiente;
+            }
+        }
+        cabeza = dummy.siguiente;
+    }
+
+    public void eliminarRepetidosSinDummy() {
+        while (cabeza != null && cabeza.siguiente != null
+                && cabeza.dato == cabeza.siguiente.dato) {
+            int valor = cabeza.dato;
+            while (cabeza != null && cabeza.dato == valor) {
+                cabeza = cabeza.siguiente;
+            }
+        }
+        if (cabeza == null) {
+            return;
+        }
+
+        Nodo previo = cabeza;
+        Nodo actual = cabeza.siguiente;
+
+        while (actual != null) {
+            if (actual.siguiente != null && actual.dato == actual.siguiente.dato) {
+                int valor = actual.dato;
+                while (actual != null && actual.dato == valor) {
+                    actual = actual.siguiente;
+                }
+                previo.siguiente = actual;
+            } else {
+                previo = actual;
+                actual = actual.siguiente;
+            }
+        }
     }
 
     @Override

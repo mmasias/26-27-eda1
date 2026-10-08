@@ -1,6 +1,5 @@
 public class Ejemplo {
 
-    // Crea una lista a partir de los valores que le pasemos
     static ListaEnlazada crear(int... datos) {
         ListaEnlazada lista = new ListaEnlazada();
         for (int d : datos) {
