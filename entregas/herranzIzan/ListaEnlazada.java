@@ -27,6 +27,27 @@ public class ListaEnlazada {
         System.out.println("null");
     }
 
+    public void eliminarRepetidos() {
+        Nodo nodoDummy = new Nodo(0);
+        nodoDummy.siguiente = cabeza;
+        Nodo nodoAnterior = nodoDummy;
+ 
+        while (nodoAnterior.siguiente != null) {
+            Nodo nodoActual = nodoAnterior.siguiente;
+ 
+            if (nodoActual.siguiente != null && nodoActual.dato == nodoActual.siguiente.dato) {
+                while (nodoActual.siguiente != null && nodoActual.dato == nodoActual.siguiente.dato) {
+                    nodoActual = nodoActual.siguiente;
+                }
+                nodoAnterior.siguiente = nodoActual.siguiente; 
+            } else {
+                nodoAnterior = nodoAnterior.siguiente;
+            }
+        }
+ 
+        cabeza = nodoDummy.siguiente;
+    }
+
 }
  
     
