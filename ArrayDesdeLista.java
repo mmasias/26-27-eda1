@@ -14,4 +14,25 @@ public class ArrayDesdeLista {
     public int length() {
         return elementos.tamano();
     }
+
+    private void comprobarIndice(int indice) {
+        if (indice < 0 || indice >= elementos.tamano()) {
+            throw new IndexOutOfBoundsException("Indice fuera de rango: " + indice);
+        }
+    }
+
+    public int get(int indice) {
+        comprobarIndice(indice);
+        return elementos.obtener(indice);
+    }
+
+    public void set(int indice, int valor) {
+        comprobarIndice(indice);
+        elementos.establecer(indice, valor);
+    }
+
+    @Override
+    public String toString() {
+        return elementos.toString();
+    }
 }
