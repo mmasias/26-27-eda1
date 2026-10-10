@@ -23,7 +23,6 @@ public class Array {
         assert posicion >= 0 && posicion < tamaño;
         Nodo actual = cabeza;
 
-        int iteraciones = 0; 
         for (int i = 0; i < posicion; i++){
             actual = actual.siguiente;
         }
@@ -41,5 +40,13 @@ public class Array {
     public void asignar (int posicion, int valor){
         Nodo nodo = obtenerPosicion(posicion);
         nodo.dato = valor;
+    }
+
+    public void mostrar(){
+        System.out.print("[");
+        for (int i = 0; i<tamaño; i++){
+            System.out.print(obtenerPosicion(i).dato+",");
+        }
+        System.out.print("]");
     }
 }
