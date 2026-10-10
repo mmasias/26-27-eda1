@@ -27,3 +27,30 @@ Se pierde: simplicidad respecto al array tradicional, se añade una capa de cód
 
 
 
+Reglas que habría que imponer en lista utilizando un array:
+Tamaño lógico variable: el número de elementos puede aumentar o disminuir, aunque el array tenga una capacidad determinada.
+
+Orden: al insertar o eliminar elementos, hay que desplazar los demás para mantener su posición relativa.
+
+Índices válidos: solo se puede acceder a posiciones que contengan elementos; al insertar, también se permite el índice tamaño.
+
+Redimensionamiento: cuando el array se llena, debemos crear otro más grande y copiar los elementos.
+
+
+Reglas que habría que relajar en lista utilizando un array:
+Capacidad fija del array: aunque un array no puede cambiar de longitud, podemos sustituirlo por otro de mayor tamaño.
+
+Tamaño físico igual al número de elementos: el array puede reservar más posiciones de las que utiliza la lista.
+
+Necesidad de implementar todas las operaciones directamente: podemos construir métodos como añadir, insertar y eliminar para proporcionar una interfaz de lista sobre el array.
+
+
+
+
+¿Qué se gana y que se pierde?
+Se gana: una lista que puede crecer, reducirse, insertar elementos y eliminarlos utilizando únicamente un array como almacenamiento.
+
+Se pierde: simplicidad, porque hay que controlar manualmente el tamaño, los desplazamientos y las ampliaciones.
+
+
+
