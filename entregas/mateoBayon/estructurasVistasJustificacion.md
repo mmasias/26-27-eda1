@@ -1,0 +1,3 @@
+# Estructuras vistas y justificación
+
+Hacer un array para los votos dirigidos a cada uno de los candidatos, distinguiendo entre votos válidos, nulos o cualquier abstención que pueda presentarse. Para ello, se puede crear un array de objetos donde cada objeto represente a un candidato y contenga propiedades para los votos válidos, nulos y abstenciones. Luego, se pueden actualizar las propiedades correspondientes en el array de candidatos basándose en los votos que se irán comprobando uno a uno, de principio a fin. Al final, se puede mostrar un resumen de los resultados para cada candidato, incluyendo el total de votos válidos, nulos y abstenciones. Al ser un conjunto de datos fijos, opino que hacer estos dos elementos arrays es lo más óptimo.
