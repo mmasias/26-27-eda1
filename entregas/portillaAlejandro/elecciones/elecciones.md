@@ -1,0 +1,3 @@
+# Estructuras vistas y justificación
+
+En las elecciones podemos ver un array que sirve para almacenar los votos de cada partido en una posición. También se ve una cola porque normalmente quien ha recibido el papel primero, es el primero que va a entregar el papel. Luego vemos una lista cuando los papeles estan dentro de la urna ya que a la hora de sacarlos para el conteo, puedes cogerlos de donde quieras sin seguir un orden concreto. Y finalmente, dependiendo de la organización que tengas, se podría ver una pila en el conteo final si al sacar los papeles les apilas en la mesa en orden.
