@@ -1,0 +1,4 @@
+# Elecciones
+
+
+Lo que hemos visto durante en las elecciones fueron los 3 seleccionados para la oposición hacia la posición de Delegado del curso fue un modelo tipo lista en la en la que añadimos a los 3 *candidatos* y a los que se les va a añadir los votos anonimos de las personas que elijan al delegado del curso en este caso fuimos 34 y cada alumno incluido los opositorios votaron por [Hector],[Adriana],[Khatherine] en las que recae el peso de sus votantes durante el año, tambien prodiamos utilizar arrays y asignar el tamaño desde el primer momento ya que lo conocemos, durante la votacion se vieron casos de "voto blanco" y la "abstencion" los cuales habria que tener en cuenta para evitar posibles errores en el futuro.                                                                                                                                                                                                                                    
