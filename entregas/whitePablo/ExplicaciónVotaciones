@@ -1,0 +1,6 @@
+La votación de delegado explicada.
+
+Cada persona de la clase es un objeto de una clase Alumno, con atributos como nombre y voto. Cada candidato también es un objeto, con nombre y un contador de votos (una primitiva int). Votar consiste en asignar a voto la referencia al candidato elegido.
+Si los votos se guardaran en una matriz de [N] posiciones, el tamaño máximo estaría fijado de antemano. Si alguien llegara tarde o se anulara un voto, habría que desplazar elementos, igual que pasaba con la fila del Reto 001. Por eso es más adecuado guardarlos en una lista enlazada, donde cada voto es un nodo que guarda el candidato elegido y conoce al nodo siguiente. Así se añade o se anula un voto sin mover los demás. A cambio, se pierde el acceso directo por índice.
+El recuento es un recorrido de la lista con un puntero auxiliar. Se empieza en la cabeza y, mientras el nodo actual no sea null, se suma 1 al contador de su candidato y se avanza al siguiente.
+Insertar o eliminar el primer voto es un caso especial, porque cambia la cabeza de la lista. Con un nodo dummy como predecesor ficticio, todas las posiciones siguen el mismo camino de ejecución y se evitan errores en ese caso límite.
