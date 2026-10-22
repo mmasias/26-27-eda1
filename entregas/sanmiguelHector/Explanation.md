@@ -1,0 +1,8 @@
+# 1. Propuesta Revisada (Tabla y Justificación)
+
+| Dato | Decisión | Justificación | Alternativa descartada | Limitación asumida |
+| :--- | :--- | :--- | :--- | :--- |
+| **Censo / Alumnos presentes** | Lista Enlazada Dinámica | El flujo de votantes no es estático; permite la incorporación de alumnos que llegan tarde y la eliminación inmediata de aquellos que se retiran antes de votar. | Array de tamaño fijo | El acceso o búsqueda de un alumno por nombre para verificar si pertenece al censo o ya votó requiere un tiempo de búsqueda. |
+| **Papeletas depositadas (Urna)** | Cola (FIFO) | Representa fielmente la urna física, donde las papeletas que se depositan primero se extraen y cuentan en ese mismo orden durante el escrutinio. | Pila (LIFO) | No permite acceso aleatorio ni inspeccionar papeletas del interior sin desencolar las previas en orden de llegada. |
+| **Historial** | Pila (LIFO) | Permite la reversión de la última anotación registrada (*deshacer / undo*) en caso de detectarse un error durante el conteo manual. | Cola | Para corregir un error cometido varias anotaciones atrás, es necesario desapilar secuencialmente todos los estados intermedios. |
+| **Candidaturas activas** | Lista Dinámica | Permite gestionar altas y bajas de candidaturas en tiempo de ejecución (retiro por parte del candidato o rechazo por la mesa electoral). | Array estático / Enum | La verificación de la validez de una candidatura durante el recuento requiere un recorrido secuencial de la lista. |
