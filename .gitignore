@@ -1,0 +1,10 @@
+# Ficheros compilados de Java
+*.class
+
+# Directorios temporales y del entorno
+tmp/
+.idea/
+
+# Scripts locales
+run.sh
+entregas/*/run.sh
