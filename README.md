@@ -1,33 +1,67 @@
-# Estructura de datos y algoritmos I
+# RETO 004
 
-Repo de materiales y proyectos de la asignatura **EDA1** del [Grado de Ingeniería Informática](https://www.uneatlantico.es/escuela-politecnica-superior/estudios-grado-oficial-en-ingenieria-informatica) la [Universidad Europea del Atlántico](https://www.uneatlantico.es).
+- Katerine Lisbeth Rafael Bourdierd
 
-## Curso *[26][27]*
+# Reto 004 - Refactoring de la Propuesta Electoral
 
-- [Temario](https://github.com/mmasias/eda1/blob/main/temario/README.md)
-  - [A día de hoy, deberíamos saber...](temario/aDiaDeHoy.md)
-    - [Ejercicios](temario/ejercicios/README.md)
-- Evaluaciones
-  - Evaluación continua: [Retos!](evaluaciones/retos/README.md)
-  - Exámenes
-    - Parcial: [Enunciado](evaluaciones/examenes/examenParcial/README.md) | Repositorio de trabajo y entrega.
-    - Final: [Enunciado](evaluaciones/examenes/examenFinal/README.md) | Repositorio de trabajo y entrega.
-    - Extraordinario: [Enunciado](evaluaciones/examenes/examenExtraordinario/README.md) | Repositorio de trabajo y entrega.
+Este repositorio contiene la solución completa para el proceso electoral utilizando una arquitectura basada dinámicamente en **Java Plain Vanilla**, prescindiendo de los paquetes estándar de `java.util`.
 
-> ***NOTA:*** Los repositorios de entrega de exámenes estarán disponible días antes del examen. El repositorio con el enunciado del examen se activa al inicio del examen y permitirá entregas hasta la finalización del mismo.
+---
 
-## Herramientas et al
+## 1. Propuesta de Arquitectura y Decisiones de Estructuras
 
-- [GIT](https://git-scm.com/) & [GitHub](https://github.com/)
-- [Visual Studio Code](https://code.visualstudio.com/)
-- [PlantText](https://www.planttext.com/), para usar el formato [PlantUML](https://plantuml.com/es/) al realizar diagramas de: [actividades](https://plantuml.com/es/activity-diagram-beta) / [estados](https://plantuml.com/es/state-diagram) / [clases](https://plantuml.com/es/class-diagram) / [objetos](https://plantuml.com/es/object-diagram) / [y otros...](https://plantuml.com/es/sitemap-language-specification)
-- [Google Docs](https://drive.google.com/drive/u/0/my-drive)
-- [Plantillas](/documentos/plantillas.md)
+### Tabla de Decisiones
 
-## Bibliografía & enlaces interesantes
+| Dato | Decisión | Justificación | Alternativa descartada | Limitación asumida |
+| :--- | :--- | :--- | :--- | :--- |
+| **Categorías y Candidaturas de Votación** | `ListaEnlazada` (Clase `ListaEnlazada` con objetos `Nodo`) | Permite registrar dinámicamente cada categoría ("Candidato 1", "Candidato 2", "Candidato 3", "Voto Nulo", "Abstención") y actualizar sus conteos acumulados sin depender de índices fijos. | `Array` de tamaño estático para candidatos, pues no permite insertar o reorganizar categorías dinámicamente ante bajas o incorporaciones de última hora. | Búsqueda secuencial O(N) para localizar el nodo de un candidato u opción al ejecutar `sumarVoto`. |
+| **Control de Asistencia de Alumnos** | `ListaEnlazada` de Votantes/Asistentes | Permite gestionar la llegada tardía e inserción de alumnos, así como la eliminación de un alumno que abandona la sala antes de ejercer su voto. | `Cola` de asistencia, pues solo admitiría salidas en orden FIFO e impediría que un alumno intermedio abandone el aula voluntariamente. | El borrado de un alumno que se retira de la sala requiere un recorrido de nodos de coste O(N). |
+| **Urna (Recepción de Papeletas)** | `Cola` | Mantiene el orden estricto de llegada cronológica de cada papeleta depositada para su posterior procesamiento secuencial en el escrutinio. | `Pila`, ya que invertiría el orden de extracción (LIFO), escrutando en primer lugar los últimos votos depositados en lugar de los primeros. | No es posible inspeccionar ni corregir un voto dentro de la urna sin extraer previamente todos los votos colocados por encima de él. |
+| **Historial de Modificaciones del Recuento** | `Pila` | Facilita la reversión inmediata de la última anotación procesada en la lista de candidaturas en caso de error de lectura durante el escrutinio (mecanismo *Undo/Deshacer*). | `Cola`, porque eliminaría la primera anotación efectuada en lugar de la última realizada, distorsionando el conteo de la mesa. | Solo permite corregir errores de forma inmediata sobre la última anotación acumulada en el nodo correspondiente. |
 
-NOTA: *Algunos enlaces podrían requerir **credenciales de acceso al campus** o a otros espacios colaborativos.*
+---
 
-- Hoja de asistencia et-al
-- Libro de la asignatura
-- Este repo, versión de ediciones pasadas
+### Cambios respecto a la propuesta previa
+
+#### Decisiones Mantenidas
+* **Uso de `Cola` para la Urna**: Se mantiene para asegurar la fidelidad cronológica de extracción de votos tal y como fueron depositados.
+* **Uso de `Pila` para el Historial del Recuento**: Se mantiene para revertir o corregir en la `ListaEnlazada` el último nodo incrementado por error durante el escrutinio.
+
+#### Decisiones Cambiadas
+* **Estructuración del Conteo en Nodos (`ListaEnlazada` de Categorías)**: Se adopta el modelo donde cada candidato u opción de voto es un `Nodo` individual (`nombre`, `votos`, `siguiente`) dentro de la `ListaEnlazada`. Esto simplifica la gestión del escrutinio mediante métodos directos como `sumarVoto(nombre)` y la visualización final con `mostrarResultados()`.
+* **Inclusión explícita de "Abstención" como Categoría de la Lista**: Anteriormente la abstención se calculaba únicamente como un valor derivado fuera de la estructura de conteo. Ahora se integra como un nodo de la lista para registrar cuantitativamente la falta de participación presencial junto a los votos nulos y candidaturas.
+
+---
+
+## 2. Retos Extendidos
+
+### Reporte de Abstención al Cierre
+* **Fórmula de Cálculo**: Abstención Registrada = Alumnos Presentes sin Votar = Nodos de Asistencia - Nodos de Votantes Efectivos.
+* **Estructuras consultadas**: Se obtiene consultando la cantidad de alumnos en la `ListaEnlazada` de Asistencia y comparándola con la `ListaEnlazada` de Votantes Efectivos. Posteriormente, dicho total se almacena e incrementa en el nodo `"Abstención"` de la `ListaEnlazada` de resultados.
+* **Por qué no se puede contar leyendo papeletas**: Las papeletas leídas de la urna corresponden únicamente a las interacciones con el recipiente de votación (votos a candidatos, en blanco o nulos). Un alumno que asistió al aula pero decidió marcharse o rehusó depositar un sobre jamás generará una papeleta física en la urna.
+
+### Debate y Refutación de la Alternativa de Abordaje
+* **Decisión rebatida**: Utilizar un `Array` estático `votos[index]` donde la posición indexada rígida representa a cada candidato.
+* **Hecho del enunciado no atendido**: El enunciado contempla candidaturas retiradas o rechazadas antes o durante la jornada electoral.
+* **Alternativa no considerada**: Representar el conteo mediante una `ListaEnlazada` dinámica donde se pueden agregar o eliminar nodos de candidaturas sin romper la integridad de los datos.
+* **Limitación no declarada**: Si la candidata 2 es rechazada, la posición `votos[1]` del array queda inutilizada, exigiendo desplazamientos manuales de memoria O(N) o arriesgando lecturas sobre datos nulos/inválidos durante el escrutinio.
+
+---
+
+## 3. Estructura del Código Fuente
+
+### Clase `Nodo`
+Representa cada elemento o categoría de votación dentro de la lista.
+* `nombre`: Identificador de la opción o candidato.
+* `votos`: Contador acumulado de votos recibidos.
+* `siguiente`: Referencia al próximo nodo.
+
+### Clase `ListaEnlazada`
+Administra el conjunto de nodos y aplica la lógica de manipulación de datos.
+* `agregar(nombre)`: Inserta una nueva categoría o candidato.
+* `sumarVoto(nombre)`: Incrementa el contador de votos tras buscar la categoría por su nombre.
+* `restarVoto(nombre)`: Decrementa el contador (útil para desapilar y corregir errores).
+* `mostrarCandidato(nombre)`: Consulta y despliega la información individual de un candidato específico.
+* `mostrarResultados()`: Recorre la lista mostrando el desglose de votos por categoría y el total general.
+
+---
