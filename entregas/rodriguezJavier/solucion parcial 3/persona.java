@@ -1,14 +1,14 @@
-public class persona {
+public class Persona {
 
     private String nombre;
     private String dni;
 
-    public persona(String nombre, String dni) {
+    public Persona(String nombre, String dni) {
         this.nombre = nombre;
         this.dni = dni;
     }
 
-    public persona(persona persona) {
+    public Persona(Persona persona) {
         this.nombre = persona.nombre;
         this.dni = persona.dni;
     }
