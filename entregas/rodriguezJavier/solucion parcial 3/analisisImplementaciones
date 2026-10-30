@@ -21,4 +21,4 @@ Ambas implementaciones permiten construir una lista enlazada porque las dos guar
 
 La diferencia está en cómo almacenan las personas. Con A, cada nodo contiene una copia independiente de la persona recibida. Con B, el nodo comparte el objeto original.
 
-Por tanto, la inserción y el recorrido de la lista pueden funcionar de la misma manera, pero las modificaciones posteriores de las personas pueden producir resultados diferentes.
+Por tanto, la inserción y el recorrido de la lista pueden funcionar de la misma manera, pero las modificaciones posteriores de las personas pueden producir resultados diferentes. 
