@@ -1,0 +1,244 @@
+Ejercicio 1: Análisis de implementaciones
+a) ¿Qué implementación considera que utiliza mejor los recursos de memoria? Justifique su respuesta.
+
+La implementación B aprovecha mejor la memoria porque guarda directamente la referencia al objeto Persona, sin crear una copia cada vez que se inserta un elemento.
+
+En cambio, la implementación A crea una nueva instancia mediante new Persona(...) en cada inserción, por lo que utiliza más memoria al duplicar información.
+
+b) ¿Qué problemas o ventajas podría causar cada implementación? Proporcione ejemplos.
+
+Implementación A:
+- Ventaja: Los datos quedan independientes del objeto original. Si modificamos la persona original, la información guardada en la lista no cambia.
+- Inconveniente: Consume más memoria porque crea copias de los objetos.
+Ejemplo: Si insertamos a Juan y después cambiamos su nombre a Juan Carlos, en la lista seguirá apareciendo como Juan.
+
+Implementación B:
+- Ventaja: Ahorra memoria porque utiliza el mismo objeto, sin crear copias.
+- Inconveniente: Los cambios realizados sobre el objeto original también afectan a la lista.
+Ejemplo: Si cambiamos el nombre de Juan a Juan Carlos, también se actualizará el nombre almacenado en el nodo.
+
+c) ¿Cómo afectaría cada implementación al comportamiento de una lista que use estos nodos?
+- Implementación A: La lista guarda copias independientes, por lo que los cambios realizados desde fuera no afectan a sus elementos.
+- Implementación B: La lista comparte los mismos objetos con el resto del programa, así que cualquier modificación también se verá reflejada en ella.
+En conclusión, A ofrece mayor independencia entre los datos, mientras que B permite ahorrar memoria, aunque hay que tener más cuidado con las modificaciones.
+
+Ejercicio 2: Gestión de referencias
+a) ¿Qué nombre tendrá la persona almacenada en la lista? ¿Por qué?
+
+La persona almacenada en la lista tendrá el nombre «Juan Manuel».
+
+Esto ocurre porque lista.obtenerPersona("1234") devuelve la referencia al objeto que está guardado en el nodo. Por tanto, al ejecutar personaEncontrada.setNombre("Juan Manuel"), estamos modificando el propio objeto y no una copia.
+
+b) ¿Qué sucedería si modificamos juan.setNombre("Juan Carlos") después de insertarlo en la lista? ¿Depende de la implementación del Nodo que usemos (A o B de la pregunta anterior)?
+
+Implementación A:
+
+El nombre almacenado en la lista seguirá siendo Juan, ya que al insertar la persona se creó una copia independiente. Los cambios realizados sobre el objeto original no afectan a esa copia.
+
+Implementación B:
+
+El nombre también cambiará a Juan Carlos, porque tanto la variable juan como el nodo apuntan al mismo objeto.
+
+Por tanto, el resultado depende de la implementación utilizada: A crea una copia y B conserva la referencia original.
+
+Ejercicio 3: Referencias y constructores
+a) ¿Cuántos objetos Persona diferentes hay en memoria? Justifique su respuesta.
+
+Inicialmente hay dos objetos Persona diferentes.
+- El primero se crea con new Persona("Manuel", "1234") y se guarda en la variable manuel.
+- El segundo se crea con new Persona(manuel), que genera una copia del primero.
+- La variable referencia no crea otro objeto, simplemente apunta al mismo que manuel.
+Por tanto, manuel y referencia apuntan al primer objeto, mientras que copia apunta al segundo.
+
+Representación de las referencias:
+manuel -----------\
+                   \
+                    ---> [Persona 1]
+                   /      Manuel, 1234
+referencia -------/
+
+
+copia -----------------> [Persona 2]
+                          Manuel, 1234
+
+
+Si utilizamos la implementación B, seguirán existiendo dos objetos Persona, ya que los nodos guardan las referencias originales.
+
+En cambio, con la implementación A se crearán tres copias adicionales al insertar los elementos, por lo que habrá cinco objetos en total.
+
+b) Si hacemos manuel.setNombre("Manuel Antonio"), ¿qué elementos de la lista se verán afectados? ¿Por qué?
+
+Con la implementación B:
+
+Cambiarán los elementos insertados mediante manuel y referencia, porque ambas variables apuntan al mismo objeto. El elemento insertado mediante copia seguirá teniendo el nombre Manuel.
+
+Con la implementación A:
+
+Ningún elemento de la lista cambiará, ya que cada nodo tiene su propia copia independiente.
+Elemento	Implementación A	Implementación B
+manuel	Manuel	Manuel Antonio
+copia	Manuel	Manuel
+referencia	Manuel	Manuel Antonio
+
+
+Ejercicio 4: Diseño y optimización
+Explicación y justificación de las decisiones tomadas
+
+Control de elementos duplicados:
+
+He añadido un método llamado contieneDni() que recorre la lista y comprueba si ya existe una persona con ese DNI. Así evitamos insertar personas con identificadores repetidos.
+
+Posibilidad de elegir entre copia y referencia:
+
+He añadido un parámetro booleano llamado clonar al método de inserción:
+- Si es true, se crea una copia de la persona.
+- Si es false, se guarda directamente la referencia original.
+Optimización de memoria y tiempo de ejecución:
+
+Se utiliza una lista enlazada simple que inserta los nuevos nodos al principio. Esta operación tiene un coste de O(1), ya que no hace falta recorrer la lista.
+
+En cambio, comprobar si existe un DNI requiere recorrer los elementos, por lo que su coste es O(n).
+
+Propuesta de implementación de la Lista
+
+Para cumplir con las condiciones del ejercicio, propongo el siguiente código:
+public class ListaPersonasOptimizada {
+
+    private Nodo primero;
+
+    public void insertarPersona(Persona persona, boolean clonar) {
+
+        if (persona == null) {
+            throw new IllegalArgumentException(
+                "La persona no puede ser nula"
+            );
+        }
+
+        if (contieneDni(persona.getDni())) {
+            throw new IllegalArgumentException(
+                "Ya existe una persona con el DNI: " + persona.getDni()
+            );
+        }
+
+        Persona personaAAlmacenar;
+
+        if (clonar) {
+            personaAAlmacenar = new Persona(persona);
+        } else {
+            personaAAlmacenar = persona;
+        }
+
+        this.primero = new Nodo(personaAAlmacenar, this.primero);
+    }
+
+    public boolean contieneDni(String dni) {
+
+        Nodo actual = primero;
+
+        while (actual != null) {
+
+            if (actual.getPersona().getDni().equals(dni)) {
+                return true;
+            }
+
+            actual = actual.getSiguiente();
+        }
+
+        return false;
+    }
+}
+
+
+Ejemplo de utilización:
+Persona juan = new Persona("Juan", "1234");
+
+ListaPersonasOptimizada lista = new ListaPersonasOptimizada();
+
+// Inserta una copia de Juan.
+lista.insertarPersona(juan, true);
+
+// Inserta una referencia al objeto original.
+lista.insertarPersona(
+    new Persona("Ana", "5678"),
+    false
+);
+
+
+Justificación del funcionamiento:
+
+Primero se comprueba que la persona no sea nula. Después se verifica que no exista otra con el mismo DNI.
+
+Si todo es correcto, se decide si guardar una copia o la referencia original dependiendo del valor de clonar. Finalmente, se crea el nodo y se añade al principio de la lista.
+
+Ejercicio 5: Análisis de código
+a) ¿Qué problemas potenciales ve en este código respecto al manejo de referencias?
+
+Veo principalmente tres problemas:
+
+1. Modificaciones desde fuera de la lista
+
+Si se guardan las referencias originales, cualquier cambio realizado sobre una persona también afectará a la información de la lista.
+
+Por ejemplo, si cambiamos el nombre de Juan por Pedro, ese cambio también aparecerá en la lista.
+
+2. Acceso directo a los objetos internos
+
+El método buscarPersona() devuelve directamente el objeto almacenado, sin crear una copia. Esto permite modificar los datos internos de la lista desde fuera.
+
+3. Comprobación de duplicados
+
+Dependiendo de cómo esté implementado contiene(), puede que solo compare referencias y permita introducir personas diferentes con el mismo DNI.
+
+Por eso sería mejor comprobar los DNI y no solamente si son el mismo objeto.
+
+b) ¿Cómo lo mejoraría para evitar modificaciones no deseadas de los objetos?
+
+Utilizaría copias defensivas para proteger los datos.
+
+Al insertar una persona, crearía una copia mediante el constructor copia. También devolvería una copia cuando se realizase una búsqueda.
+
+Así, los cambios realizados sobre los objetos originales no modificarían directamente los datos almacenados en la lista.
+
+c) Proponga una solución que proteja la integridad de los datos.
+
+Una solución sería modificar los métodos de inserción y búsqueda para trabajar siempre con copias de los objetos.
+
+Código propuesto:
+public class GestorPersonas {
+
+    private Lista lista;
+
+    public GestorPersonas() {
+        lista = new Lista();
+    }
+
+    public void agregarPersona(Persona persona) {
+
+        if (persona == null) {
+            return;
+        }
+
+        if (!lista.contiene(persona)) {
+            lista.insertarPersona(new Persona(persona));
+        }
+    }
+
+    public Persona buscarPersona(String dni) {
+
+        Persona personaEncontrada = lista.obtenerPersona(dni);
+
+        if (personaEncontrada != null) {
+            return new Persona(personaEncontrada);
+        }
+
+        return null;
+    }
+}
+
+
+Justificación:
+- Se comprueba que la persona no sea nula antes de insertarla.
+- Al añadirla, se guarda una copia para evitar modificaciones externas.
+- Al buscarla, también se devuelve una copia, protegiendo el objeto original de la lista.
+- La lista se inicializa en el constructor para evitar referencias nulas.
+De esta manera, los datos quedan más protegidos y se evita que se modifiquen accidentalmente desde otras partes del programa.
