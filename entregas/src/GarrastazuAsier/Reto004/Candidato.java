@@ -1,4 +1,3 @@
-package GarrastazuAsier.Reto004;
 
 public class Candidato {
     private String nombre;
