@@ -247,64 +247,60 @@ Diseñar una implementación de una clase `Lista` que:
 ---
 
 ### Propuesta de diseño (Java)
-
-```java
-import java.util.HashSet;
-import java.util.Set;
-
+``` java
 public class ListaOptimizada {
 
     private static class Nodo {
-        Persona persona;
-        Nodo siguiente;
+        private Persona persona;
+        private Nodo siguiente;
 
-        Nodo(Persona persona, Nodo siguiente) {
+        public Nodo(Persona persona, Nodo siguiente) {
             this.persona = persona;
             this.siguiente = siguiente;
+        }
+
+        public Persona getPersona() {
+            return persona;
+        }
+
+        public Nodo getSiguiente() {
+            return siguiente;
         }
     }
 
     private Nodo primero;
-    // Conjunto de referencias para verificación en O(1)
-    private final Set<Persona> referenciasExistentes;
 
     public ListaOptimizada() {
         this.primero = null;
-        this.referenciasExistentes = new HashSet<>();
     }
 
-    /**
-     * Inserta una persona en la lista.
-     * 
-     * @param persona Objeto Persona a insertar.
-     * @param hacerCopia Si es true, inserta una copia defensiva; si es false, guarda la referencia.
-     * @return true si la inserción fue exitosa, false si la referencia exacta ya existía en la lista.
-     */
     public boolean insertar(Persona persona, boolean hacerCopia) {
         if (persona == null) {
             throw new IllegalArgumentException("La persona no puede ser nula.");
         }
 
-        // 1. Detectar si la referencia exacta (en memoria) ya está en la lista
-        if (referenciasExistentes.contains(persona)) {
-            System.out.println("Aviso: La referencia exacta a este objeto ya existe en la lista.");
-            return false;
+        // 1. Detectar si la referencia ya existe recorriendo la lista (Sin HashSet)
+        Nodo actual = primero;
+        while (actual != null) {
+            // Comparamos si es exactamente la misma referencia en memoria (==)
+            // O si prefieres comparar por contenido/DNI, usarías: actual.getPersona().getDni().equals(persona.getDni())
+            if (actual.getPersona() == persona) {
+                System.out.println("Aviso: Ya existe una referencia a esta misma Persona en la lista.");
+                return false; // Se rechaza la inserción por duplicidad de referencia
+            }
+            actual = actual.getSiguiente();
         }
 
-        // 2. Elegir entre copia o referencia
-        Persona aInsertar = hacerCopia ? new Persona(persona) : persona;
+     
+        Persona personaAInsertar = hacerCopia ? new Persona(persona) : persona;
 
-        // 3. Insertar al inicio de la lista
-        Nodo nuevo = new Nodo(aInsertar, primero);
-        primero = nuevo;
-
-        // Registrar la referencia añadida
-        referenciasExistentes.add(aInsertar);
+        
+        primero = new Nodo(personaAInsertar, primero);
         return true;
     }
 }
+````
 
-```
 
 ---
 
