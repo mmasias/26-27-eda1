@@ -284,7 +284,7 @@ public class ListaOptimizada {
           
             if (actual.getPersona() == persona) {
                 System.out.println("Aviso: Ya existe una referencia a esta misma Persona en la lista.");
-                return false; // Se rechaza la inserción por duplicidad de referencia
+                return false; 
             }
             actual = actual.getSiguiente();
         }
