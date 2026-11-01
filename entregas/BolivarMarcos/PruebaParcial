@@ -1,0 +1,281 @@
+# Examen: nodos, listas y referencias en Java
+
+## 1. Análisis de implementaciones
+
+### Código de referencia
+
+```java
+// Implementación A
+class Nodo {
+    private Persona persona;
+    private Nodo siguiente;
+
+    public Nodo(Persona persona, Nodo siguiente) {
+        this.persona = new Persona(persona.getNombre(), persona.getDni());
+        this.siguiente = siguiente;
+    }
+}
+
+// Implementación B
+class Nodo {
+    private Persona persona;
+    private Nodo siguiente;
+
+    public Nodo(Persona persona, Nodo siguiente) {
+        this.persona = persona;
+        this.siguiente = siguiente;
+    }
+}
+```
+
+---
+
+### A. ¿Qué implementación considera que utiliza mejor los recursos de memoria? Justifique su respuesta.
+
+La que mejor aprovecha la memoria es la **Implementación B**.
+
+**Justificación:**
+
+- **Implementación A:** cada vez que se crea un nodo se ejecuta `new Persona(...)`, es decir, se reserva en el heap un objeto nuevo aunque ya exista uno con los mismos datos. En una lista con muchos elementos, esto supone tener cada persona duplicada.
+- **Implementación B:** el nodo solo almacena una referencia al objeto que ya existe (`this.persona = persona`). No se crea ninguna instancia adicional, por lo que se consume menos memoria y el *Garbage Collector* tiene menos trabajo.
+
+---
+
+### B. ¿Qué problemas o ventajas podría causar cada implementación? Proporcione ejemplos.
+
+#### Implementación A (copia defensiva)
+
+**Ventajas:**
+
+- **Independencia de los datos:** la lista trabaja con su propia copia, así que un cambio externo no le afecta. Por ejemplo, si después de insertar a `juan` se ejecuta `juan.setNombre("Pedro")`, en la lista sigue constando el nombre anterior.
+
+**Desventajas:**
+
+- **Más coste de memoria y CPU:** cada inserción implica crear un objeto más, lo que aumenta el uso del heap y hace la operación algo más lenta.
+- **Posibles datos desactualizados:** si el programa espera que la lista refleje los cambios hechos sobre el objeto original, ambos quedarán desincronizados. Siguiendo el ejemplo anterior, `juan` se llamaría "Pedro" y su copia en la lista no.
+
+#### Implementación B (por referencia)
+
+**Ventajas:**
+
+- **Eficiencia:** la inserción es más rápida y no se duplican datos, ya que la lista y el resto del programa comparten el mismo objeto.
+- **Datos siempre sincronizados:** una modificación del objeto original se ve de inmediato desde la lista.
+
+**Desventajas:**
+
+- **Aliasing (mutabilidad compartida):** cualquier parte del programa que tenga la referencia puede alterar el contenido de la lista sin pasar por ella. Por ejemplo, `persona.setDni("9999")` cambia también el DNI del elemento almacenado, y eso puede provocar errores difíciles de localizar si la lista necesitaba que sus datos no cambiasen.
+
+---
+
+### C. ¿Cómo afectaría cada implementación al comportamiento de una lista que use estos nodos?
+
+- **Con la Implementación A:** la lista guarda una versión independiente de cada `Persona`. Si el programa principal modifica la instancia que pasó al insertar, el dato de la lista no se altera.
+- **Con la Implementación B:** la lista comparte los objetos con el resto del programa. Cualquier cambio hecho desde fuera sobre una `Persona` insertada se refleja en el elemento que la lista almacena y devuelve.
+
+---
+
+## 2. Gestión de referencias
+
+### Código de referencia
+
+```java
+class Lista {
+    private Nodo primero;
+
+    public void insertarPersona(Persona persona) {
+        Nodo nuevo = new Nodo(persona, primero);
+        primero = nuevo;
+    }
+
+    public boolean contiene(Persona persona) {
+        Nodo actual = primero;
+        while (actual != null) {
+            if (actual.getPersona().getDni().equals(persona.getDni())) {
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+        return false;
+    }
+
+    public Persona obtenerPersona(String dni) {
+        Nodo actual = primero;
+        while (actual != null) {
+            if (actual.getPersona().getDni().equals(dni)) {
+                return actual.getPersona();
+            }
+            actual = actual.getSiguiente();
+        }
+        return null;
+    }
+}
+```
+
+---
+
+### a) Si tenemos:
+
+```java
+Lista lista = new Lista();
+Persona juan = new Persona("Juan", "1234");
+lista.insertarPersona(juan);
+Persona personaEncontrada = lista.obtenerPersona("1234");
+personaEncontrada.setNombre("Juan Manuel");
+```
+
+**¿Qué nombre tendrá la persona almacenada en la lista? ¿Por qué?**
+
+Se llamará **"Juan Manuel"**.
+
+**Justificación:**
+`obtenerPersona("1234")` no devuelve una copia, sino la referencia al objeto que guarda el nodo. Por tanto, `personaEncontrada` apunta al mismo objeto que la lista y `setNombre` lo modifica directamente.
+
+Este resultado es el mismo con las dos implementaciones de `Nodo`, porque el método devuelve lo que hay almacenado en el nodo. La diferencia está en la variable `juan`: con la Implementación B también pasa a llamarse "Juan Manuel", mientras que con la A sigue siendo "Juan", ya que el nodo guarda una copia.
+
+---
+
+### b) ¿Qué sucedería si modificamos `juan.setNombre("Juan Carlos")` después de insertarlo en la lista? ¿Depende de la implementación del Nodo que usemos (A o B)?
+
+Sí, depende de la implementación:
+
+- **Con la Implementación B:** el nombre en la lista **cambia** a "Juan Carlos", porque el nodo guarda la misma referencia que la variable `juan`.
+- **Con la Implementación A:** el nombre en la lista **no cambia**, porque al insertar se creó un objeto `Persona` nuevo y `juan` no apunta a él.
+
+---
+
+## 3. Referencias y constructores
+
+### Código de referencia
+
+```java
+public class Persona {
+    private String nombre;
+    private String dni;
+
+    public Persona(String nombre, String dni) {
+        this.nombre = nombre;
+        this.dni = dni;
+    }
+
+    public Persona(Persona persona) {
+        this.nombre = persona.nombre;
+        this.dni = persona.dni;
+    }
+}
+
+public class Principal {
+    public static void main(String[] args) {
+        Persona manuel = new Persona("Manuel", "1234");
+        Persona copia = new Persona(manuel);
+        Persona referencia = manuel;
+
+        Lista lista = new Lista();
+        lista.insertarPersona(manuel);
+        lista.insertarPersona(copia);
+        lista.insertarPersona(referencia);
+    }
+}
+```
+
+---
+
+### a) ¿Cuántos objetos Persona diferentes hay en memoria? Justifique su respuesta.
+
+Usando la Implementación B de `Nodo`, hay **2 objetos `Persona`** en memoria.
+
+**Justificación:**
+
+1. `new Persona("Manuel", "1234")` crea el **primer objeto**.
+2. `new Persona(manuel)` crea el **segundo objeto**, con el mismo contenido que el primero pero en otra posición de memoria.
+3. `Persona referencia = manuel` no crea nada: la variable `referencia` simplemente apunta al primer objeto.
+
+Las tres inserciones no añaden personas nuevas, ya que los nodos solo guardan referencias.
+
+Si se usara la Implementación A, habría **5 objetos**: los 2 anteriores más las 3 copias que crean los nodos, una por cada inserción.
+
+---
+
+### b) Si hacemos `manuel.setNombre("Manuel Antonio")`, ¿qué elementos de la lista se verán afectados? ¿Por qué?
+
+Con la Implementación B, cambian el **primer** y el **tercer** elemento insertados (`manuel` y `referencia`).
+
+**Justificación:**
+Las variables `manuel` y `referencia` apuntan al mismo objeto, así que esos dos nodos comparten una única `Persona` y ambos reflejan el nuevo nombre. El segundo elemento (`copia`) es un objeto distinto y conserva el nombre "Manuel".
+
+Con la Implementación A **no se vería afectado ningún elemento**, porque cada nodo tiene su propia copia, independiente de `manuel`.
+
+---
+
+## 4. Diseño y optimización
+
+### Requisitos solicitados
+
+Diseñar una implementación de una clase `Lista` que:
+
+1. Permita detectar si se está intentando insertar una referencia a una `Persona` que ya existe en la lista.
+2. Permita elegir si queremos insertar una copia de la `Persona` o mantener la referencia.
+3. Sea eficiente en el uso de memoria.
+
+---
+
+### Propuesta de diseño (Java)
+
+```java
+public class ListaOptimizada {
+
+    private static class Nodo {
+        Persona persona;
+        Nodo siguiente;
+
+        Nodo(Persona persona, Nodo siguiente) {
+            this.persona = persona;
+            this.siguiente = siguiente;
+        }
+    }
+
+    private Nodo primero;
+
+    /**
+     * Indica si este mismo objeto (no otro con iguales datos) ya está en la lista.
+     */
+    public boolean contieneReferencia(Persona persona) {
+        Nodo actual = primero;
+        while (actual != null) {
+            if (actual.persona == persona) {
+                return true;
+            }
+            actual = actual.siguiente;
+        }
+        return false;
+    }
+
+    /**
+     * Inserta una persona al inicio de la lista.
+     *
+     * @param persona Objeto Persona a insertar.
+     * @param hacerCopia true para guardar una copia; false para guardar la referencia.
+     * @return true si se insertó; false si esa referencia ya estaba en la lista.
+     */
+    public boolean insertar(Persona persona, boolean hacerCopia) {
+        if (persona == null) {
+            throw new IllegalArgumentException("La persona no puede ser nula.");
+        }
+
+        if (contieneReferencia(persona)) {
+            return false;
+        }
+
+        Persona aInsertar = hacerCopia ? new Persona(persona) : persona;
+        primero = new Nodo(aInsertar, primero);
+        return true;
+    }
+}
+```
+
+---
+
+### Justificación de las decisiones tomadas
+
+- **Detección de referencias repetidas:** `contieneReferencia` recorre la lista comparando con `==`, que comprueba si se trata del mismo objeto en memoria. No se usa `equals()` ni se compara el DNI, porque eso detectaría personas con los mismos datos, no la misma referencia. Una copia es un objeto distinto y, por tanto, no cuenta como referencia repetida.
+- **Copia o referencia:** el parámetro `hacerCopia` deja la decisión a quien llama al método. Con `true` se obtiene aislamiento frente a cambios externos usando el constructor de copia; con `false` se ahorra memoria.
+- **Eficiencia de memoria:** no se usa ninguna estructura auxiliar, de modo que cada elemento ocupa solo un nodo, y únicamente se crean copias cuando se piden. La contrapartida es que cada inserción cuesta O(n) por el recorrido. Un conjunto basado en `IdentityHashMap` la dejaría en O(1), pero gastaría más memoria, que es justo lo que se pide optimizar.
