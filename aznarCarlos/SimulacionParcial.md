@@ -279,11 +279,9 @@ public class ListaOptimizada {
             throw new IllegalArgumentException("La persona no puede ser nula.");
         }
 
-        // 1. Detectar si la referencia ya existe recorriendo la lista (Sin HashSet)
         Nodo actual = primero;
         while (actual != null) {
-            // Comparamos si es exactamente la misma referencia en memoria (==)
-            // O si prefieres comparar por contenido/DNI, usarías: actual.getPersona().getDni().equals(persona.getDni())
+          
             if (actual.getPersona() == persona) {
                 System.out.println("Aviso: Ya existe una referencia a esta misma Persona en la lista.");
                 return false; // Se rechaza la inserción por duplicidad de referencia
