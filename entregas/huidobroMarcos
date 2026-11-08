@@ -1,0 +1,208 @@
+# Resolución
+ 
+## Pregunta 1: análisis de implementaciones
+ 
+### a) ¿Qué implementación usa mejor la memoria?
+La **Implementación B**.
+Solo guarda una referencia (que son solamente unos pocos bytes) al objeto `Persona` que ya existe.
+La **A** crea un objeto `Persona` nuevo por cada nodo, con su propia cabecera de objeto y sus campos, y además deja la `Persona` original en memoria si alguien más la usa.
+Con *n* nodos, A mantiene hasta *n* objetos `Persona` extra.
+
+
+### b) Problemas y ventajas de cada una
+ 
+| **A (copia defensiva)** | La lista queda **aislada**: si alguien modifica el objeto original,
+los datos de la lista no cambian. Protege los invariantes (por ejemplo, el DNI).
+Mayor consumo de memoria y de tiempo (se crea un objeto por inserción). Se pierde la **identidad**: la lista ya no contiene "la" persona, sino otra igual. Si `Persona` tiene más atributos que `nombre` y `dni`, hay que acordarse de copiarlos todos. Si `Persona` tiene subclases (`Alumno`, etc.), la copia las convierte en `Persona` y se pierde información. Lanza `NullPointerException` si `persona` es `null`. |
+
+  
+**B (referencia compartida)** | Eficiente en memoria y tiempo. Mantiene la identidad: lo que hay en la lista es el mismo objeto que usa el resto del programa, y los cambios se ven en todas partes.
+  **Aliasing**: cualquier código con una referencia al objeto puede modificarlo sin pasar por la lista. Puede romper invariantes.
+  Dos listas pueden compartir sin querer el mismo objeto. |
+ 
+Ejemplo:
+ 
+```java
+Persona p = new Persona("Ana", "111");
+Nodo a = new Nodo(p, null);   // Implementación A
+Nodo b = new Nodo(p, null);   // Implementación B
+p.setNombre("Ana María");
+// a.getPersona().getNombre() -> "Ana"        (copia independiente)
+// b.getPersona().getNombre() -> "Ana María"  (misma referencia)
+```
+
+### c) Efecto sobre el comportamiento de la lista
+ 
+- **A**: la lista se comporta como un **almacén de valores**.
+Es estable y predecible respecto al exterior, pero los cambios hechos fuera nunca llegan a ella,
+y comparar con `==` entre el objeto insertado y el almacenado da siempre `false`.
+
+  
+- **B**: la lista se comporta como un **almacén de referencias**.
+Refleja los cambios externos de inmediato y `==` funciona como identidad,
+pero su estado puede cambiar "a escondidas".
+
+
+
+  
+## Pregunta 2: gestión de referencias
+ 
+### a) ¿Qué nombre tendrá la persona almacenada?
+ 
+**"Juan Manuel"**, con cualquiera de las dos implementaciones. `obtenerPersona` devuelve `actual.getPersona()`, es decir, la referencia **interna** del nodo, no una copia:
+ 
+- Con **B**, ese objeto es el mismo `juan`, así que `juan` también pasa a ser "Juan Manuel".
+  
+- Con **A**, ese objeto es la copia interna del nodo. Al modificarla, la persona almacenada cambia, pero `juan` sigue siendo "Juan".
+  
+**Conclusión:** aunque el nodo haga copia al **entrar**, si el getter devuelve la referencia interna, la encapsulación se rompe por la **salida**.
+
+
+
+### b) ¿Qué pasa con `juan.setNombre("Juan Carlos")` tras insertarlo?
+ 
+Sí, **depende de la implementación del Nodo**:
+ 
+- **B**: la persona almacenada pasa a llamarse "Juan Carlos", porque `juan` y el contenido del nodo son el mismo objeto.
+- **A**: la lista no se ve afectada y sigue con "Juan", porque guarda una copia independiente.
+
+
+
+
+  
+## Pregunta 3: referencias y constructores
+ 
+### a) ¿Cuántos objetos `Persona` diferentes hay en memoria?
+ 
+**Dos**:
+ 
+- `manuel` y `referencia` apuntan al **mismo** objeto (`Persona referencia = manuel;` solo copia la referencia).
+- `copia` es un objeto **distinto** (`new Persona(manuel)` crea uno nuevo con los mismos valores).
+  
+> Si se usara la Implementación A, la lista crearía además una copia por cada nodo, es decir, 3 objetos extra.
+
+
+### b) ¿Qué elementos de la lista se ven afectados por `manuel.setNombre("Manuel Antonio")`?
+ 
+Como la inserción es por la cabeza, la lista queda: `referencia → copia → manuel`.
+ 
+- **Con Nodo B**: se ven afectados el **primer y el tercer nodo** (`referencia` y `manuel`), porque apuntan al mismo objeto que `manuel`.
+El nodo central (`copia`) **no**, porque es otro objeto.
+
+- **Con Nodo A**: **ninguno**, porque cada nodo guarda su propia copia.
+
+
+
+
+
+
+## Pregunta 4: diseño y optimización
+ 
+### Diseño propuesto
+ 
+- Lista enlazada simple, **sin estructuras auxiliares** (ni `HashMap` ni listas paralelas), para no gastar memoria extra.
+- Un `Nodo` que **no copia** por sí mismo: solo guarda lo que le dan. Así la decisión de copiar o no vive en la lista y el nodo es barato.
+- `insertarPersona(Persona, boolean copiar)` permite elegir entre copia y referencia.
+- La detección de una referencia ya existente se hace con **`==`** (identidad), no con `equals` ni con el DNI, porque se pide detectar la *misma referencia*.
+- Si ya está, se rechaza la inserción devolviendo `false`.
+```java
+class Nodo {
+    private final Persona persona;
+    private Nodo siguiente;
+ 
+    Nodo(Persona persona, Nodo siguiente) {
+        this.persona = persona;
+        this.siguiente = siguiente;
+    }
+    Persona getPersona() { return persona; }
+    Nodo getSiguiente() { return siguiente; }
+}
+ 
+class Lista {
+    private Nodo primero;
+ 
+    /** Devuelve true si se insertó; false si esa referencia ya estaba en la lista. */
+    public boolean insertarPersona(Persona persona, boolean copiar) {
+        if (persona == null) throw new IllegalArgumentException("persona null");
+ 
+        if (!copiar && contieneReferencia(persona)) {
+            return false;                       // misma referencia ya almacenada
+        }
+        Persona aGuardar = copiar ? new Persona(persona) : persona;
+        primero = new Nodo(aGuardar, primero);
+        return true;
+    }
+ 
+    /** Detección por identidad (==): O(n) en tiempo, O(1) en memoria. */
+    public boolean contieneReferencia(Persona persona) {
+        for (Nodo n = primero; n != null; n = n.getSiguiente()) {
+            if (n.getPersona() == persona) return true;
+        }
+        return false;
+    }
+}
+```
+
+### Justificación de las decisiones
+ 
+1. **Detección con `==`**: distingue "la misma referencia" de "otra persona con los mismos datos", que es justo lo que se pide.
+2. **Parámetro `copiar`**: el llamador decide entre aislamiento (copia) y eficiencia/identidad (referencia).
+3. **Memoria**: solo se crea un objeto extra cuando el usuario lo pide expresamente. No hay estructuras auxiliares, y el coste de la detección es tiempo O(n), no memoria.
+4. **Copia con el constructor de copia de `Persona`**: evita repetir la lógica de copia y concentra los cambios en un solo sitio si `Persona` añade campos.
+5. **Si se inserta una copia**, nunca puede ser una referencia duplicada (es un objeto nuevo), por eso la comprobación solo se hace en modo referencia.
+> **Alternativa si se admite memoria extra:** un `IdentityHashMap` daría detección en O(1), a costa de más memoria.
+ 
+---
+
+
+
+
+  
+## Pregunta 5: análisis de código
+ 
+### a) Problemas potenciales
+ 
+1. **`lista` nunca se inicializa** (`private Lista lista;` es `null`), así que se lanza `NullPointerException` en el primer uso.
+2. **Inconsistencia en la detección de duplicados**: `contiene` compara por **DNI**, no por referencia. Una `Persona` distinta con el mismo DNI se rechaza, mientras que la misma referencia con el DNI modificado después se admitiría de nuevo.
+3. **`agregarPersona` guarda la referencia recibida**: quien la pasó conserva un alias y puede modificar el objeto dentro de la lista sin pasar por el gestor.
+4. **`buscarPersona` devuelve la referencia interna**: el cliente puede llamar a `setNombre` o `setDni` y alterar el estado de la lista. Cambiar el DNI es especialmente grave, porque rompe la búsqueda y la detección de duplicados.
+5. No hay validación de `null`.
+### b) Cómo mejorarlo
+ 
+- Inicializar `lista` en el constructor.
+- Aplicar **copias defensivas** en la entrada (`agregarPersona`) y en la salida (`buscarPersona`).
+- O, mejor aún, hacer `Persona` **inmutable**, de modo que no haga falta copiar.
+- Validar parámetros `null`.
+### c) Solución que protege la integridad de los datos
+ 
+#### Opción 1: `Persona` inmutable (la más limpia, sin copias)
+ 
+```java
+public final class Persona {
+    private final String nombre;
+    private final String dni;
+ 
+    public Persona(String nombre, String dni) {
+        this.nombre = Objects.requireNonNull(nombre);
+        this.dni = Objects.requireNonNull(dni);
+    }
+    public String getNombre() { return nombre; }
+    public String getDni() { return dni; }
+ 
+    // "Modificar" devuelve un objeto nuevo
+    public Persona conNombre(String nuevoNombre) {
+        return new Persona(nuevoNombre, dni);
+    }
+}
+```
+ 
+Como nadie puede cambiar una `Persona` ya creada, la lista puede guardar y devolver referencias sin riesgo (y se puede usar el Nodo B sin problemas).
+
+
+
+
+
+
+
+
+  
