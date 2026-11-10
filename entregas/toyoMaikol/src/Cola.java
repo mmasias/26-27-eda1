@@ -1,21 +1,34 @@
-/**
- * Cola
- */
 public class Cola {
+    private Nodo frente;
+    private Nodo fin;
 
-    public void encolar(int valor) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'encolar'");
+    public Cola() {
+        this.frente = null;
+        this.fin = null;
     }
 
-    public boolean estaVacia() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'estaVacia'");
+    public void encolar(int valor) {
+        Nodo nuevoNodo = new Nodo(valor);
+        if (estaVacia()) {
+            frente = nuevoNodo;
+        } else {
+            fin.siguiente = nuevoNodo;
+        }
+        fin = nuevoNodo;
     }
 
     public int desencolar() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'desencolar'");
+        int valor = frente.valor;
+        frente = frente.siguiente;
+        
+        if (frente == null) {
+            fin = null;
+        }
+        
+        return valor;
     }
 
+    public boolean estaVacia() {
+        return frente == null;
+    }
 }
