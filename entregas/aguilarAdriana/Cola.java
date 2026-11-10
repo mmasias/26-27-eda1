@@ -18,7 +18,30 @@ public class Cola {
         ultimo = valor;
         tamaño++;
     }
-    
-    public int desencolar() 
-    public boolean estaVacia()
+
+    public int desencolar() {
+        assert !estaVacia() : "Precondición: la cola no puede estar vacía";
+ 
+        Pila reordenada = new Pila();
+        for (int i = 0; i < tamaño; i++) {
+            reordenada.apilar(pila.desapilar());
+        }
+ 
+        int valor = reordenada.desapilar();
+        tamaño--;
+ 
+        if (!reordenada.estaVacia()) {
+            primero = reordenada.desapilar();
+            pila.apilar(primero);
+        }
+        while (!reordenada.estaVacia()) {
+            pila.apilar(reordenada.desapilar());
+        }
+ 
+        return valor;
+    }
+ 
+    public boolean estaVacia() {
+        return tamaño == 0;
+    }
 }
