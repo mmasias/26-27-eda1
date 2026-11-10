@@ -1,0 +1,26 @@
+# Ficheros compilados de Java
+*.class
+
+# Empaquetados
+*.jar
+*.war
+*.ear
+
+# Directorios de compilación / IDEs
+bin/
+out/
+tmp/
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Scripts locales
+run.sh
+entregas/*/run.sh
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
