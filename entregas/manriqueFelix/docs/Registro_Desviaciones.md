@@ -1,0 +1,2 @@
+- No hay ninguna desviación. El código implementado respeta con total fidelidad el diseño congelado de la Parte 1. 
+- La lógica de representación mediante dos pilas (una de entrada y otra de salida para el volcado), así como las precondiciones estipuladas, se han mantenido intactas.
