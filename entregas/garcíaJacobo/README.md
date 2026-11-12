@@ -31,3 +31,18 @@ He mantenido `ultimo` como un entero (`int`), pero utilizo el valor `0` para rep
 **Justificación:**
 
 En Java, una variable de tipo `int` no puede almacenar `null`. Por eso he utilizado `0` como valor especial cuando no hay elementos.
+### Enmienda 3. Método `apilar(int valor)`
+
+**Contrato original:**
+
+Mi planteamiento era comprobar primero si la cola estaba vacía mediante un `if`. Después, recorrer los elementos de la cola utilizando `desencolar()`, actualizar `ultimo` y modificar el tamaño según fueran entrando los valores.
+
+**Cambio realizado:**
+
+En mi implementación no he utilizado el `if (cola.estaVacia())`, porque si la cola está vacía, el `while` directamente no se ejecuta.
+
+Además, actualizo `ultimo` con el valor introducido y aumento `tamaño` una sola vez al finalizar el método.
+
+**Justificación:**
+
+He realizado estos cambios porque no necesito comprobar por separado si la cola está vacía. Además, solamente estoy añadiendo un elemento nuevo, por lo que el tamaño debe aumentar una única vez.
