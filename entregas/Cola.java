@@ -9,6 +9,7 @@ public class Cola {
     }
 
     public void encolar(int valor) {
+        entrada.apilar(valor);
     }
 
     public int desencolar() {
