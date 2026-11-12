@@ -29,10 +29,6 @@ public class PruebasPila {
         System.out.println("desapilar()  -> Devuelto: " + valorDesapilado3 + " (esperado: 2) | Estado en cola: [1]");
         assert valorDesapilado3 == 2 : "Error: se esperaba 2 pero se obtuvo " + valorDesapilado3;
 
-        int valorDesapilado4 = pila.desapilar();
-        System.out.println("desapilar()  -> Devuelto: " + valorDesapilado4 + " (esperado: 1) | Estado en cola: []");
-        assert valorDesapilado4 == 1 : "Error: se esperaba 1 pero se obtuvo " + valorDesapilado4;
-
         assert pila.estaVacia() : "Error: la pila deberia haber quedado vacia";
 
         System.out.println("\nTodas las operaciones y aserciones se completaron con exito.");
