@@ -13,6 +13,7 @@ public class Cola {
     }
 
     public int desencolar() {
+        assert !estaVacia();
         if (salida.estaVacia()) {
             while (!entrada.estaVacia()) {
                 salida.apilar(entrada.desapilar());
