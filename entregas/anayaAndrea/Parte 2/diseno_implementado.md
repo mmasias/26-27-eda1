@@ -105,6 +105,3 @@ De esta manera, he podido adaptar el diseño inicial y llevarlo a una implementa
 
 ---
 
-<text color="secondary" size="xs" weight="medium">EDA1 · EXAMEN PARCIAL · PARTE 2</text>
-
-**Diseño revisado e implementación documentada.**
