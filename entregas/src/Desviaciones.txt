@@ -1,0 +1,9 @@
+regitro de desviaciones
+
+No hice ningún cambio respecto a lo que habia planteado en la primera parte del examen.
+
+Utilicé una cola y un contador para saber cuantos elementos hay. Cuando meto un numero nuevo, muevo los anteriores para que el ultimo que entro sea el primero en salir.
+
+Al sacar un numero, simplemente saco el primero de la cola.
+
+El codigo funciona siguiendo la idea que habia planteado desde el principio.
