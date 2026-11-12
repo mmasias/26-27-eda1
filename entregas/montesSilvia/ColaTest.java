@@ -11,7 +11,7 @@ public class ColaTest {
         assert resultado2 == 2;
         int resultado3= cola.desencolar ();
         assert resultado3 == 3;
-        assert cola.estaVacia ();
+        assert !cola.estaVacia ();
         System.out.println ("Todas las pruebas han sido superadas.");
     }
 }
