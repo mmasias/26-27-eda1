@@ -13,10 +13,15 @@ public class Cola {
     }
 
     public int desencolar() {
-        return 0;
+        if (salida.estaVacia()) {
+            while (!entrada.estaVacia()) {
+                salida.apilar(entrada.desapilar());
+            }
+        }
+        return salida.desapilar();
     }
 
     public boolean estaVacia() {
-        return true;
+        return entrada.estaVacia() && salida.estaVacia();
     }
 }
