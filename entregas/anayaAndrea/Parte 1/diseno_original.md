@@ -1,10 +1,10 @@
-# 📚 EDA1 — Parte 1: Diseño de una Cola mediante una Pila
+## Parte 1: Diseño de una Cola mediante una Pila
 
-> **Objetivo:** Implementar una estructura de datos Cola utilizando las operaciones disponibles de una Pila.
+>Implementar una estructura de datos Cola utilizando las operaciones disponibles de una Pila.
 
 ---
 
-## 01. 💡 Planteamiento inicial
+## 💡 Planteamiento inicial
 
 Para abordar el ejercicio, he pensado en aprovechar el comportamiento de una pila para conseguir invertir el orden de los elementos y así aproximarme al funcionamiento de una cola.
 
@@ -20,7 +20,7 @@ A partir de este planteamiento, he desarrollado el razonamiento teniendo en cuen
 
 Mi planteamiento se ha basado principalmente en aprovechar el comportamiento de la pila para invertir el orden de los elementos.
 
-## 02. 🔍 Desarrollo del razonamiento
+## 🔍 Desarrollo del razonamiento
 
 Una pila sigue el principio **LIFO (Last In, First Out)**, es decir, el último elemento en entrar es el primero en salir.
 
@@ -45,7 +45,7 @@ Al extraer los elementos, el orden obtenido sería:
 
 A partir de este comportamiento, he planteado aprovechar la inversión del orden para conseguir el funcionamiento **FIFO (First In, First Out)**, característico de una cola.
 
-## 03. ⚙️ Desarrollo de la propuesta
+## ⚙️ Desarrollo de la propuesta
 
 Mi idea ha sido utilizar las operaciones de apilar y desapilar para reorganizar los elementos y conseguir que el primero introducido sea también el primero en salir.
 
