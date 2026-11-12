@@ -1,0 +1,37 @@
+
+REGISTRO DE DESVIACIONES
+
+
+1. Diseño de la cola
+
+No he cambiado nada respecto a lo diseñado en la primera
+parte.
+
+He mantenido las dos pilas y las operaciones diseñadas:
+
+- Encolar: apilar directamente en la pila principal.
+- Desencolar: transferir los elementos a la pila auxiliar,
+  extraer el elemento más antiguo y devolver los restantes
+  a la pila principal. Esta es la parte importante, y está igual que
+  lo que diseñé en clase previamente.
+- Esta vacía: comprobar que ambas pilas estén vacías.
+
+
+2. Implementación de Nodo
+
+He eliminado el modificador private de los atributos
+valor y siguiente de Nodo para permitir el acceso directo
+desde Pila, tal como está implementada en el modelo
+proporcionado.
+
+Este cambio ha sido necesario para que ambas clases sean compatibles
+y no modifica el algoritmo de la cola ni su comportamiento.
+
+
+3. Pruebas
+
+Se ha ejecutado la secuencia de pruebas solicitada.
+Todas las comprobaciones han finalizado correctamente.
+
+Nota: he añadido un extra-desencolar() para vaciar la pila
+y demostrar el funcionamiento correctamente en el archivo de prueba.
