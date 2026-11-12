@@ -33,5 +33,5 @@ y no modifica el algoritmo de la cola ni su comportamiento.
 Se ha ejecutado la secuencia de pruebas solicitada.
 Todas las comprobaciones han finalizado correctamente.
 
-Nota: he añadido un extra-desencolar() para vaciar la pila
+Nota: he añadido un extra-desencolar() para vaciar la cola
 y demostrar el funcionamiento correctamente en el archivo de prueba.
