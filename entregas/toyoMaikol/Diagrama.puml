@@ -1,0 +1,104 @@
+@startuml
+skinparam DefaultFontName Arial
+skinparam monochrome true
+skinparam objectBackgroundColor white
+
+title Diagrama de Memoria: Secuencia Completa
+
+object "1. Cliente: apilar(1)" as p1 {
+    Acción: cola.encolar(1)
+    -- Estado --
+    frente -> [ 1 ] <- fin
+}
+
+object "2. Cliente: apilar(2)" as p2 {
+    Acción: cola.encolar(2)
+    -- Estado --
+    frente -> [ 1, 2 ] <- fin
+}
+
+object "3. Cliente: apilar(3)" as p3 {
+    Acción: cola.encolar(3)
+    -- Estado --
+    frente -> [ 1, 2, 3 ] <- fin
+}
+
+object "4A. desapilar() [Iterar]" as p4a {
+    Acción: Vaciar hacia 'colaAuxiliar'
+    -- Memoria temporal --
+    'cola' original: [ ]
+    'auxiliar': [ 1, 2 ]
+    variable 'ultimoValor': 3
+}
+
+object "4B. desapilar() [Restaurar]" as p4b {
+    Acción: Volcar 'colaAuxiliar' en 'cola'
+    -- Estado final --
+    'cola' original: [ 1, 2 ]
+    Retorna: 3
+}
+
+object "5. Cliente: apilar(4)" as p5 {
+    Acción: cola.encolar(4)
+    -- Estado --
+    frente -> [ 1, 2, 4 ] <- fin
+}
+
+object "6A. desapilar() [Iterar]" as p6a {
+    Acción: Vaciar hacia 'colaAuxiliar'
+    -- Memoria temporal --
+    'cola' original: [ ]
+    'colaAuxiliar': [ 1, 2 ]
+    variable 'ultimoValor': 4
+}
+
+object "6B. desapilar() [Restaurar]" as p6b {
+    Acción: Volcar 'colaAuxiliar' en 'cola'
+    -- Estado final --
+    'cola' original: [ 1, 2 ]
+    Retorna: 4
+}
+
+object "7A. desapilar() [Iterar]" as p7a {
+    Acción: Vaciar hacia 'colaAuxiliar'
+    -- Memoria temporal --
+    'cola' original: [ ]
+    'colaAuxiliar': [ 1 ]
+    variable 'ultimoValor': 2
+}
+
+object "7B. desapilar() [Restaurar]" as p7b {
+    Acción: Volcar 'colaAuxiliar' en 'cola'
+    -- Estado final --
+    'cola' original: [ 1 ]
+    Retorna: 2
+}
+
+object "8A. desapilar() [Iterar]" as p8a {
+    Acción: Extraer único elemento
+    -- Memoria temporal --
+    'cola' original: [ ]
+    'colaAuxiliar': [ ]
+    variable 'ultimoValor': 1
+}
+
+object "8B. desapilar() [Restaurar]" as p8b {
+    Acción: Sin datos que restaurar
+    -- Estado final --
+    'cola' original: [ ] (vacía)
+    Retorna: 1
+}
+
+p1 --> p2
+p2 --> p3
+p3 --> p4a
+p4a --> p4b
+p4b --> p5
+p5 --> p6a
+p6a --> p6b
+p6b --> p7a
+p7a --> p7b
+p7b --> p8a
+p8a --> p8b
+
+@enduml
