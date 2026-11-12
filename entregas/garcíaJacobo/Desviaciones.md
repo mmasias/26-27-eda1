@@ -14,6 +14,7 @@ El constructor no recibe una cola como parámetro. En su lugar, crea una nueva c
 
 El enunciado exigía un constructor sin parámetros (`Pila()`), por lo que tuve que adaptar mi planteamiento inicial.
 
+
 ## 2. Variable `ultimo`
 
 **Mi planteamiento inicial:**
@@ -26,7 +27,9 @@ He mantenido `ultimo` como un atributo de tipo `int`, utilizando el valor `0` cu
 
 **Motivo de la desviación:**
 
-Una variable de tipo `int` no puede almacenar `null`. Por eso he utilizado `0` como valor inicial y cuando la pila se queda sin elementos. Para comprobar si está vacía utilizo el método `estaVacia()`.
+Una variable de tipo `int` no puede almacenar `null`. Por eso he utilizado `0` como valor inicial y cuando la pila se queda sin elementos.
+
+Hay que tener en cuenta que `ultimo = 0` no significa necesariamente que la pila esté vacía, ya que también puedo apilar el número `0`. Por eso, para comprobar si la pila está vacía, utilizo el método `estaVacia()`.
 
 ## 3. Método `apilar(int valor)`
 
