@@ -6,13 +6,11 @@
 
 ## 01. 💡 Planteamiento inicial
 
-He basado mi diseño en aprovechar el comportamiento LIFO de una pila para invertir el orden de los elementos y aproximarme al comportamiento FIFO de una cola.
+Para abordar el ejercicio, he pensado en aprovechar el comportamiento de una pila para conseguir invertir el orden de los elementos y así aproximarme al funcionamiento de una cola.
 
-Esta primera propuesta constituye el punto de partida para la implementación de la estructura, cuyo funcionamiento y organización se revisarán en la segunda parte del ejercicio.
+Mi idea inicial ha sido utilizar las operaciones de apilar y desapilar para reorganizar los elementos, buscando que el primero en introducirse sea también el primero en salir.
 
-Para abordar el ejercicio, he partido de la idea de utilizar una estructura de datos **Pila** para intentar implementar el comportamiento de una **Cola**.
-
-Para ello, he tenido en cuenta las operaciones principales que proporciona la pila:
+A partir de este planteamiento, he desarrollado el razonamiento teniendo en cuenta las características y operaciones de una pila:
 
 | Operación | Función |
 |:---|:---|
