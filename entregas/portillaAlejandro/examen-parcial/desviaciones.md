@@ -1,25 +1,35 @@
+
 ## 1. Errores detectados
 
-En mi diseño inicial cometí los siguientes errores:
+En mi diseño inicial planteé implementar la cola utilizando una única pila y un atributo entero.
 
-- Utilicé una única pila para implementar la cola, sin tener en cuenta que una pila funciona con LIFO y una cola con FIFO.
-- Al apilar los elementos 1, 2 y 3, el primero en desapilarse sería el 3, cuando debería ser el 1.
-- Pensé que utilizando un atributo entero para controlar los elementos podría solucionar el problema, pero este atributo solamente permite contar, no cambiar el orden de salida.
+El principal error fue no tener en cuenta que una pila funciona con LIFO y una cola con FIFO. Por ejemplo, al introducir los elementos 1, 2 y 3 en una pila, saldría primero el 3, cuando debería salir el 1.
+
+También comprobé que utilizar un entero para contar los elementos no solucionaba el problema, ya que no permitía cambiar su orden de salida.
 
 ## 2. Correcciones realizadas
 
-Para solucionar estos errores, he realizado los siguientes cambios:
+Para solucionar estos problemas, he realizado los siguientes cambios:
 
 - He sustituido la única pila por dos pilas: `entrada` y `salida`.
 - Utilizo `entrada` para almacenar los elementos que encolo.
-- Cuando `salida` está vacía, paso todos los elementos de `entrada` a `salida`, invirtiendo así su orden.
-- De esta manera, consigo que salga primero el elemento más antiguo y respeto el comportamiento FIFO.
-- Mantengo un atributo entero llamado `cantidad` para controlar el número de elementos y limitar la cola a cuatro.
+- Cuando `salida` está vacía, transfiero los elementos de `entrada` a `salida`, invirtiendo su orden para respetar FIFO.
+- He añadido el atributo entero `cantidad` para controlar el número total de elementos.
+- He añadido la constante `CAPACIDAD`, con valor 4, para limitar el número máximo de elementos.
 
-## 3. Comprobaciones
+## 3. Comprobaciones y restricciones
 
-He probado la secuencia del examen en `PruebaCola.java` y he comprobado que las llamadas a `desencolar()` devuelven correctamente 1, 2 y 3. También he comprobado que el último elemento es el 4 y que la cola termina vacía.
+He añadido las siguientes comprobaciones mediante `assert`:
 
-## 4. Desviación respecto al diseño inicial
+- Evitar introducir más de cuatro elementos.
+- Evitar desencolar cuando la cola está vacía.
 
-He cambiado la implementación de una pila a dos pilas porque he comprobado que mi diseño inicial no garantizaba el comportamiento FIFO. He mantenido el límite de cuatro elementos y he respetado las restricciones del enunciado.
+He creado `PruebaCola.java` para comprobar la secuencia del examen y verificar que las extracciones devuelven 1, 2 y 3 en el orden correcto. También compruebo que el último elemento es el 4 y que la cola termina vacía.
+
+La implementación no utiliza arrays, nodos directamente ni recursividad, y mantiene los atributos dentro de los tipos permitidos por el enunciado.
+
+## 4. Declaración final
+
+La principal desviación respecto a mi diseño inicial ha sido pasar de una pila a dos pilas, ya que he comprobado que la estrategia original no garantizaba el comportamiento FIFO.
+
+He mantenido la idea de controlar la cantidad de elementos mediante un entero y la capacidad máxima de cuatro elementos.
