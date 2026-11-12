@@ -27,3 +27,4 @@ public class Cola {
         return entrada.estaVacia() && salida.estaVacia();
     }
 }
+
