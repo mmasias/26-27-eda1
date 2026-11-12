@@ -29,7 +29,7 @@ public class Pila {
             System.out.println(pila.desapilar());
             pila.apilar(4);
             System.out.println(pila.desapilar());
-            System.out.println(pila.estaVacia());
+            System.out.println(pila.desapilar());
         }
 }
 }
