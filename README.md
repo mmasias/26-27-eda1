@@ -1,33 +1,119 @@
-# Estructura de datos y algoritmos I
+# Implementación de una Pila utilizando una Cola
 
-Repo de materiales y proyectos de la asignatura **EDA1** del [Grado de Ingeniería Informática](https://www.uneatlantico.es/escuela-politecnica-superior/estudios-grado-oficial-en-ingenieria-informatica) la [Universidad Europea del Atlántico](https://www.uneatlantico.es).
+**Autora:** Katerine Lisbeth Rafael Bourdierd  
+**Asignatura:** Estructura de Datos y Algoritmos I  
+**Proyecto:** Planteamiento del examen parcial
 
-## Curso *[26][27]*
+## 1. Mi planteamiento inicial
 
-- [Temario](https://github.com/mmasias/eda1/blob/main/temario/README.md)
-  - [A día de hoy, deberíamos saber...](temario/aDiaDeHoy.md)
-    - [Ejercicios](temario/ejercicios/README.md)
-- Evaluaciones
-  - Evaluación continua: [Retos!](evaluaciones/retos/README.md)
-  - Exámenes
-    - Parcial: [Enunciado](evaluaciones/examenes/examenParcial/README.md) | Repositorio de trabajo y entrega.
-    - Final: [Enunciado](evaluaciones/examenes/examenFinal/README.md) | Repositorio de trabajo y entrega.
-    - Extraordinario: [Enunciado](evaluaciones/examenes/examenExtraordinario/README.md) | Repositorio de trabajo y entrega.
+Mi propuesta inicial consiste en utilizar una instancia de `Cola` como atributo principal de la clase `Pila`.
 
-> ***NOTA:*** Los repositorios de entrega de exámenes estarán disponible días antes del examen. El repositorio con el enunciado del examen se activa al inicio del examen y permitirá entregas hasta la finalización del mismo.
+La idea es reutilizar directamente los métodos que ya proporciona la cola:
 
-## Herramientas et al
+- `encolar(int valor)`: para introducir un elemento en la estructura.
+- `desencolar()`: para extraer un elemento de la estructura.
+- `estaVacia()`: para comprobar si contiene elementos.
 
-- [GIT](https://git-scm.com/) & [GitHub](https://github.com/)
-- [Visual Studio Code](https://code.visualstudio.com/)
-- [PlantText](https://www.planttext.com/), para usar el formato [PlantUML](https://plantuml.com/es/) al realizar diagramas de: [actividades](https://plantuml.com/es/activity-diagram-beta) / [estados](https://plantuml.com/es/state-diagram) / [clases](https://plantuml.com/es/class-diagram) / [objetos](https://plantuml.com/es/object-diagram) / [y otros...](https://plantuml.com/es/sitemap-language-specification)
-- [Google Docs](https://drive.google.com/drive/u/0/my-drive)
-- [Plantillas](/documentos/plantillas.md)
+El planteamiento inicial de los métodos sería:
 
-## Bibliografía & enlaces interesantes
+```java
+public void apilar(int valor) {
+    cola.encolar(valor);
+}
 
-NOTA: *Algunos enlaces podrían requerir **credenciales de acceso al campus** o a otros espacios colaborativos.*
+public int desapilar() {
+    return cola.desencolar();
+}
 
-- Hoja de asistencia et-al
-- Libro de la asignatura
-- Este repo, versión de ediciones pasadas
+public boolean estaVacia() {
+    return cola.estaVacia();
+}
+```
+
+## 3. UML de clases
+
+El siguiente diagrama representa cómo planteo organizar las clases y sus relaciones.
+
+```mermaid
+classDiagram
+    class Pila {
+        -Cola cola
+        +Pila()
+        +void apilar(int valor)
+        +int desapilar()
+        +boolean estaVacia()
+    }
+
+    class Cola {
+        -Nodo frente
+        -Nodo fin
+        +Cola()
+        +void encolar(int valor)
+        +int desencolar()
+        +boolean estaVacia()
+    }
+
+    class Nodo {
+        +int valor
+        +Nodo siguiente
+        +Nodo(int valor)
+    }
+
+    Pila --> Cola : utiliza
+    Cola --> Nodo : enlaza
+    Nodo --> Nodo : siguiente
+```
+
+## 4. Flujo de la operación apilar()
+
+La operación comienza cuando el usuario proporciona un valor. La clase `Pila` recibe ese valor y utiliza el método `encolar()` de la cola para almacenarlo.
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant Pila
+    participant Cola
+
+    Usuario->>Pila: apilar(valor)
+    Pila->>Cola: encolar(valor)
+    Cola->>Cola: Crear y enlazar Nodo
+    Cola-->>Pila: Operación completada
+    Pila-->>Usuario: Fin de apilar()
+```
+
+## 5. Flujo de la operación desapilar()
+
+Cuando el usuario solicita extraer un elemento, la clase `Pila` llama al método `desencolar()` de la cola y devuelve el valor obtenido.
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant Pila
+    participant Cola
+
+    Usuario->>Pila: desapilar()
+    Pila->>Cola: desencolar()
+    Cola->>Cola: Retirar Nodo del frente
+    Cola-->>Pila: Devolver valor
+    Pila-->>Usuario: Devolver valor extraído
+```
+
+## 6. Conclusión
+
+Mi planteamiento consiste en reutilizar la estructura `Cola` para construir una clase `Pila`, aprovechando los métodos `encolar()` y `desencolar()`.
+
+La intención es mantener una implementación sencilla, reutilizar las clases proporcionadas y evitar crear estructuras adicionales.
+
+Este documento recoge mi propuesta inicial y el flujo que tenía previsto para cada operación.
+
+## 7. Diferencias entre mi respuesta del examen y el planteamiento desarrollado
+
+Al comparar mi respuesta escrita en el examen con el planteamiento que desarrollo en este proyecto, considero que ambas propuestas mantienen la misma idea principal: utilizar una única instancia de `Cola` dentro de la clase `Pila` y aprovechar sus métodos para realizar las operaciones.
+
+La diferencia está principalmente en cómo describo y organizo esas operaciones.
+
+En mi hoja del examen planteé utilizar `encolar()` para introducir elementos y `desencolar()` para extraerlos. En este documento desarrollo esa misma idea mediante los métodos `apilar()` y `desapilar()`, mostrando cómo se relacionan con las operaciones de la cola.
+
+Por tanto, mi planteamiento inicial no está alejado de la propuesta desarrollada, ya que parte de la misma estructura y de los mismos métodos. La diferencia está en el nivel de detalle y en la explicación del flujo de ejecución.
+
+Reconozco que utilizar directamente `encolar()` y `desencolar()` no garantiza por sí solo el comportamiento LIFO de una pila, porque la cola trabaja con el criterio FIFO. Sin embargo, la base de mi propuesta sigue siendo la misma: reutilizar la cola como estructura interna, sin crear otra estructura de almacenamiento.
