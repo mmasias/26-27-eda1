@@ -1,37 +1,24 @@
 package entregas.aguilarAdriana;
 
 public class Pila {
- 
-    private Nodo tope;
- 
+    private Nodo cima;
+
     public Pila() {
-        this.tope = null;
+        cima = null;
     }
- 
+
     public void apilar(int valor) {
-        Nodo nuevoNodo = new Nodo(valor);
-        nuevoNodo.siguiente = tope;
-        tope = nuevoNodo;
+        cima = new Nodo(valor, cima);
     }
- 
+
     public int desapilar() {
-        assert !estaVacia() : "Precondición: la pila no puede estar vacía";
-        int valor = tope.dato;
-        tope = tope.siguiente;
+        assert !estaVacia();
+        int valor = cima.valor;
+        cima = cima.siguiente;
         return valor;
     }
- 
+
     public boolean estaVacia() {
-        return tope == null;
-    }
- 
-    private static class Nodo {
-        private int dato;
-        private Nodo siguiente;
- 
-        private Nodo(int dato) {
-            this.dato = dato;
-            this.siguiente = null;
-        }
+        return cima == null;
     }
 }
