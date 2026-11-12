@@ -1,51 +1,70 @@
-# Parte 1 – Diseño inicial de una Cola mediante una Pila
+# 📚 EDA1 — Parte 1: Diseño de una Cola mediante una Pila
 
-## Objetivo
+> **Objetivo:** Implementar una estructura de datos Cola utilizando las operaciones disponibles de una Pila.
 
-Implementar una estructura de datos Cola utilizando las operaciones disponibles de una estructura Pila.
+---
 
-## Diseño inicial
+## 01. 💡 Planteamiento inicial
 
-La propuesta inicial consistía en utilizar una pila para almacenar los elementos de la cola.
+He basado mi diseño en aprovechar el comportamiento LIFO de una pila para invertir el orden de los elementos y aproximarme al comportamiento FIFO de una cola.
 
-Se planteaba utilizar las siguientes operaciones:
+Esta primera propuesta constituye el punto de partida para la implementación de la estructura, cuyo funcionamiento y organización se revisarán en la segunda parte del ejercicio.
 
-- `apilar()`: introducir un elemento.
-- `desapilar()`: extraer el elemento situado en la parte superior.
-- `estaVacia()`: comprobar si la estructura está vacía.
+Para abordar el ejercicio, he partido de la idea de utilizar una estructura de datos **Pila** para intentar implementar el comportamiento de una **Cola**.
 
-La idea era aprovechar el comportamiento LIFO de la pila para invertir el orden de los elementos y conseguir el comportamiento FIFO de una cola.
+Para ello, he tenido en cuenta las operaciones principales que proporciona la pila:
 
-## Secuencia de prueba planteada
+| Operación | Función |
+|:---|:---|
+| `apilar()` | Introducir un elemento |
+| `desapilar()` | Extraer el elemento superior |
+| `estaVacia()` | Comprobar si la pila está vacía |
 
-La secuencia del ejercicio era:
+Mi planteamiento se ha basado principalmente en aprovechar el comportamiento de la pila para invertir el orden de los elementos.
 
-1. Encolar 1.
-2. Encolar 2.
-3. Encolar 3.
-4. Desencolar.
-5. Encolar 4.
-6. Desencolar.
-7. Desencolar.
+## 02. 🔍 Desarrollo del razonamiento
 
-El comportamiento esperado de una cola sería devolver los elementos en este orden:
+Una pila sigue el principio **LIFO (Last In, First Out)**, es decir, el último elemento en entrar es el primero en salir.
+
+Por ejemplo, al introducir los elementos `1`, `2` y `3`, la estructura quedaría de la siguiente manera:
 
 ```text
-1
-2
-3
+       TOPE
+     ┌─────┐
+     │  3  │
+     ├─────┤
+     │  2  │
+     ├─────┤
+     │  1  │
+     └─────┘
 ```
 
-## Limitaciones detectadas
+Al extraer los elementos, el orden obtenido sería:
 
-Al revisar el diseño, se observa que utilizar una única pila no permite garantizar correctamente el comportamiento FIFO de una cola.
+```text
+3 → 2 → 1
+```
 
-Una pila sigue el principio LIFO (Last In, First Out), mientras que una cola sigue el principio FIFO (First In, First Out).
+A partir de este comportamiento, he planteado aprovechar la inversión del orden para conseguir el funcionamiento **FIFO (First In, First Out)**, característico de una cola.
 
-Por tanto, el diseño inicial necesita una modificación para garantizar el orden correcto de extracción.
+## 03. ⚙️ Desarrollo de la propuesta
 
-## Conclusión
+Mi idea ha sido utilizar las operaciones de apilar y desapilar para reorganizar los elementos y conseguir que el primero introducido sea también el primero en salir.
 
-El diseño inicial permitió identificar cómo aprovechar las operaciones de una pila para invertir el orden de los elementos, aunque no era suficiente para implementar correctamente una cola.
+Para comprobar el comportamiento de la estructura, he tomado como referencia la siguiente secuencia de operaciones:
 
-Esta limitación se corrige en la Parte 2 mediante una enmienda al diseño original.
+| Paso | Operación |
+|:---:|---|
+| 1 | `encolar(1)` |
+| 2 | `encolar(2)` |
+| 3 | `encolar(3)` |
+| 4 | `desencolar()` |
+| 5 | `encolar(4)` |
+| 6 | `desencolar()` |
+| 7 | `desencolar()` |
+
+El orden de extracción esperado para esta secuencia es:
+
+```text
+1 → 2 → 3
+```
