@@ -1,4 +1,5 @@
 package entregas.rodriguezJavier;
+
 public class Cola {
 
     private Pila entrada;
