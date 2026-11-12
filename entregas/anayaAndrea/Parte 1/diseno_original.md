@@ -1,6 +1,6 @@
-# 📚 EDA1 — Parte 1: Diseño de una Cola mediante una Pila
+Parte 1: Diseño de una Cola mediante una Pila
 
-> **Objetivo:** Implementar una estructura de datos Cola utilizando las operaciones disponibles de una Pila.
+>Implementar una estructura de datos Cola utilizando las operaciones disponibles de una Pila.
 
 ---
 
