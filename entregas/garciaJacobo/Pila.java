@@ -5,26 +5,19 @@ public class Pila {
 
     public Pila() {
         cola = new Cola();
-      
+
     }
 
     public void apilar(int valor) {
-
         Cola nuevaCola = new Cola();
-
         nuevaCola.encolar(valor);
 
-        numeroPersonasEnCola = tamaño;
-
-        while (numeroPersonasEnCola > 0) {
+        while (!cola.estaVacia()) {
             int actual = cola.desencolar();
             nuevaCola.encolar(actual);
-            numeroPersonasEnCola--;
         }
 
         cola = nuevaCola;
-        ultimo = valor;
-        tamaño++;
     }
 
     public int desapilar() {
