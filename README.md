@@ -1,33 +1,107 @@
-# Estructura de datos y algoritmos I
+# Implementación de Pilas y Colas
 
-Repo de materiales y proyectos de la asignatura **EDA1** del [Grado de Ingeniería Informática](https://www.uneatlantico.es/escuela-politecnica-superior/estudios-grado-oficial-en-ingenieria-informatica) la [Universidad Europea del Atlántico](https://www.uneatlantico.es).
+Implementación de estructuras de datos utilizando otras estructuras, aplicando los principios **FIFO** y **LIFO**, nodos enlazados y estructuras auxiliares.
 
-## Curso *[26][27]*
+## 1. Objetivo
 
-- [Temario](https://github.com/mmasias/eda1/blob/main/temario/README.md)
-  - [A día de hoy, deberíamos saber...](temario/aDiaDeHoy.md)
-    - [Ejercicios](temario/ejercicios/README.md)
-- Evaluaciones
-  - Evaluación continua: [Retos!](evaluaciones/retos/README.md)
-  - Exámenes
-    - Parcial: [Enunciado](evaluaciones/examenes/examenParcial/README.md) | Repositorio de trabajo y entrega.
-    - Final: [Enunciado](evaluaciones/examenes/examenFinal/README.md) | Repositorio de trabajo y entrega.
-    - Extraordinario: [Enunciado](evaluaciones/examenes/examenExtraordinario/README.md) | Repositorio de trabajo y entrega.
+El proyecto consiste en implementar dos estructuras de datos:
 
-> ***NOTA:*** Los repositorios de entrega de exámenes estarán disponible días antes del examen. El repositorio con el enunciado del examen se activa al inicio del examen y permitirá entregas hasta la finalización del mismo.
+- **Cola:** utiliza `PilaBase` para mantener el comportamiento FIFO.
+- **Pila:** utiliza `Cola` para mantener el comportamiento LIFO.
 
-## Herramientas et al
+Además, se implementa `PilaBase` mediante nodos enlazados.
 
-- [GIT](https://git-scm.com/) & [GitHub](https://github.com/)
-- [Visual Studio Code](https://code.visualstudio.com/)
-- [PlantText](https://www.planttext.com/), para usar el formato [PlantUML](https://plantuml.com/es/) al realizar diagramas de: [actividades](https://plantuml.com/es/activity-diagram-beta) / [estados](https://plantuml.com/es/state-diagram) / [clases](https://plantuml.com/es/class-diagram) / [objetos](https://plantuml.com/es/object-diagram) / [y otros...](https://plantuml.com/es/sitemap-language-specification)
-- [Google Docs](https://drive.google.com/drive/u/0/my-drive)
-- [Plantillas](/documentos/plantillas.md)
+## 2. Clases del proyecto
 
-## Bibliografía & enlaces interesantes
+| Clase | Responsabilidad |
+|---|---|
+| `Main` | Ejecutar y mostrar las pruebas. |
+| `Cola` | Implementar una cola utilizando una pila. |
+| `Pila` | Implementar una pila utilizando una cola. |
+| `PilaBase` | Implementar una pila mediante nodos enlazados. |
+| `Node` | Almacenar valores y referencias al siguiente nodo. |
 
-NOTA: *Algunos enlaces podrían requerir **credenciales de acceso al campus** o a otros espacios colaborativos.*
+## 3. Diagrama general de clases
 
-- Hoja de asistencia et-al
-- Libro de la asignatura
-- Este repo, versión de ediciones pasadas
+```mermaid
+classDiagram
+    class Main {
+        +main(String[] args)
+        -probarCola()
+        -probarPila()
+    }
+
+    class Cola {
+        -PilaBase pila
+        +encolar(int valor)
+        +desencolar() int
+        +estaVacia() boolean
+    }
+
+    class Pila {
+        -Cola cola
+        +apilar(int valor)
+        +desapilar() int
+        +estaVacia() boolean
+    }
+
+    class PilaBase {
+        -Node top
+        -int size
+        +apilar(int value)
+        +desapilar() int
+        +estaVacia() boolean
+    }
+
+    class Node {
+        -int value
+        -Node next
+    }
+
+    Main ..> Cola : utiliza
+    Main ..> Pila : utiliza
+    Cola --> PilaBase : utiliza
+    Pila --> Cola : utiliza
+    PilaBase --> Node : enlaza
+```
+
+## 4. Funcionamiento de las estructuras
+
+### Cola utilizando una pila
+
+La cola aplica el principio **FIFO (First In, First Out)**: el primer elemento en entrar es el primero en salir.
+
+Para desencolar, se crea una pila auxiliar temporal, se transfieren los elementos, se extrae el más antiguo y se restauran los elementos restantes.
+
+```mermaid
+flowchart TD
+    A(["desencolar()"]) --> B{"¿Está vacía?"}
+    B -->|Sí| C["Error de precondición"]
+    B -->|No| D["Crear pila auxiliar"]
+    D --> E["Transferir elementos"]
+    E --> F["Extraer el elemento más antiguo"]
+    F --> G["Restaurar los elementos restantes"]
+    G --> H["Devolver el elemento extraído"]
+    H --> I(["Fin"])
+```
+
+### Pila utilizando una cola
+
+La pila aplica el principio **LIFO (Last In, First Out)**: el último elemento en entrar es el primero en salir.
+
+Para desapilar, se crea una cola auxiliar temporal, se transfieren todos los elementos excepto el último, se conserva ese último como resultado y se restauran los demás.
+
+```mermaid
+flowchart TD
+    A(["desapilar()"]) --> B{"¿Está vacía?"}
+    B -->|Sí| C["Error de precondición"]
+    B -->|No| D["Crear cola auxiliar"]
+    D --> E["Extraer elementos de la cola"]
+    E --> F{"¿Quedan elementos?"}
+    F -->|Sí| G["Guardar en cola auxiliar"]
+    G --> E
+    F -->|No| H["Conservar el último elemento"]
+    H --> I["Restaurar los elementos restantes"]
+    I --> J["Devolver el elemento extraído"]
+    J --> K(["Fin"])
+```
