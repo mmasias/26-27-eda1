@@ -11,8 +11,8 @@ public class Pila {
 
     public int desapilar() {
         assert !estaVacia();
-        int valor = cima.valor;
-        cima = cima.siguiente;
+        int valor = cima.getValor();
+        cima = cima.getSiguiente();
         return valor;
     }
 
