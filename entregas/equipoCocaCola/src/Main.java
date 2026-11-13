@@ -15,7 +15,6 @@ public class Main {
         System.out.println("==================================");
     }
 
-    // PRUEBAS DE LA COLA IMPLEMENTADA CON DOS PILAS
     private static void probarCola() {
 
         Cola cola = new Cola();
@@ -62,7 +61,6 @@ public class Main {
         imprimirEstadoCola(cola);
     }
 
-    // PRUEBAS DE LA PILA IMPLEMENTADA CON UNA COLA
     private static void probarPila() {
 
         Pila pila = new Pila();
@@ -109,7 +107,6 @@ public class Main {
         imprimirEstadoPila(pila);
     }
 
-    // MUESTRA EL ESTADO DE LA COLA
     private static void imprimirEstadoCola(Cola cola) {
 
         if (cola.estaVacia()) {
@@ -143,7 +140,6 @@ public class Main {
         }
     }
 
-    // MUESTRA EL ESTADO DE LA PILA
     private static void imprimirEstadoPila(Pila pila) {
 
         if (pila.estaVacia()) {
