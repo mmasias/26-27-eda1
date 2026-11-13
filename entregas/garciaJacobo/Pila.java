@@ -5,9 +5,7 @@ public class Pila {
 
     public Pila() {
         cola = new Cola();
-        numeroPersonasEnCola = 0;
-        ultimo = 0;
-        tamaño = 0;
+      
     }
 
     public void apilar(int valor) {
