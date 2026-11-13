@@ -27,10 +27,6 @@ public class Pila {
     }
 
     public boolean estaVacia() {
-        if (cola.estaVacia()) {
-            return true;
-        } else {
-            return false;
-        }
+        return cola.estaVacia();
     }
 }
