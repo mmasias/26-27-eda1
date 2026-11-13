@@ -2,9 +2,6 @@
 public class Pila {
 
     private Cola cola;
-    private int numeroPersonasEnCola;
-    private int ultimo;
-    private int tamaño;
 
     public Pila() {
         cola = new Cola();
