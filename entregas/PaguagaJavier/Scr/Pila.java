@@ -28,7 +28,7 @@ public class Pila {
     }
 
     private void empujarValores(int valor){
-        this.cola.enconlar(valor);
+        this.cola.encolar(valor);
         for (int i = 0; i < this.tamano; i++) {
             this.cola.encolar(this.cola.desencolar());
         }
