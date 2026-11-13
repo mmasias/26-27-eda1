@@ -23,36 +23,7 @@ public class Pila {
     public int desapilar() {
 
         assert !estaVacia();
-
-        int valor = ultimo;
-        cola.desencolar();
-        tamaño--;
-
-        if (!cola.estaVacia()) {
-
-            Cola nuevaCola = new Cola();
-
-            numeroPersonasEnCola = tamaño;
-
-            while (numeroPersonasEnCola > 0) {
-
-                int actual = cola.desencolar();
-
-                if (numeroPersonasEnCola == tamaño) {
-                    ultimo = actual;
-                }
-
-                nuevaCola.encolar(actual);
-                numeroPersonasEnCola--;
-            }
-
-            cola = nuevaCola;
-
-        } else {
-            ultimo = 0;
-        }
-
-        return valor;
+        return cola.desencolar();
     }
 
     public boolean estaVacia() {
