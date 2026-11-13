@@ -1,4 +1,4 @@
-# 📚 Implementación de Pilas y Colas
+# Implementación de Pilas y Colas
 
 Implementación de estructuras de datos utilizando otras estructuras, aplicando los principios **FIFO** y **LIFO**, nodos enlazados y estructuras auxiliares.
 
