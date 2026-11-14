@@ -1,0 +1,54 @@
+
+@startuml
+
+title Diagrama UML - Pila, Cola y PilaBase
+
+class Pila {
+    - cola : Cola
+    --
+    + Pila()
+    + apilar(valor : int) : void
+    + desapilar() : int
+    + estaVacia() : boolean
+}
+
+class Cola {
+    - entrada : PilaBase
+    - salida : PilaBase
+    --
+    + Cola()
+    + encolar(valor : int) : void
+    + desencolar() : int
+    + estaVacia() : boolean
+}
+
+class PilaBase {
+    - primero : Nodo
+    - console : Console
+    --
+    + PilaBase()
+    + apilar(valor : int) : void
+    + desapilar() : int
+    + estaVacia() : boolean
+    + mostrar() : void
+}
+
+class Nodo {
+    - valor : int
+    - siguiente : Nodo
+    --
+    + Nodo(valor : int, siguiente : Nodo)
+    + getValor() : int
+    + getSiguiente() : Nodo
+    + setSiguiente(siguiente : Nodo) : void
+}
+
+class Console
+
+Pila --> Cola
+Cola --> PilaBase
+PilaBase --> Nodo
+Nodo --> Nodo
+PilaBase ..> Console
+
+@enduml
