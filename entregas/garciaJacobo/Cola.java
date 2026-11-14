@@ -15,12 +15,17 @@ public class Cola {
 
     public int desencolar() {
         assert !estaVacia();
-        int valor = primero.getValor();
-        primero = primero.getSiguiente();
-        if (primero == null) {
-            ultimo = null;
+        if (salida.estaVacia()) {
+
+            while (!entrada.estaVacia()) {
+                int valor = entrada.desapilar();
+                salida.apilar(valor);
+
+            }
         }
-        return valor;
+        
+        return salida.desapilar();
+
     }
 
     public boolean estaVacia() {
