@@ -29,6 +29,6 @@ public class Cola {
     }
 
     public boolean estaVacia() {
-        return primero == null;
+        return entrada.estaVacia() && salida.estaVacia();
     }
 }
