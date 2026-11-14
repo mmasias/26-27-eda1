@@ -1,21 +1,16 @@
 
 public class Cola {
-        private PilaBase entrada;
-        private PilaBase salida;
+    private PilaBase entrada;
+    private PilaBase salida;
 
     public Cola() {
-       entrada=new PilaBase();
-       salida=new PilaBase();
+        entrada = new PilaBase();
+        salida = new PilaBase();
     }
 
     public void encolar(int valor) {
-        Nodo nuevo = new Nodo(valor, null);
-        if (ultimo == null) {
-            primero = nuevo;
-        } else {
-            ultimo.setSiguiente(nuevo);
-        }
-        ultimo = nuevo;
+        entrada.apilar(valor);
+
     }
 
     public int desencolar() {
