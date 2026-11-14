@@ -1,12 +1,11 @@
 
 public class Cola {
-
-    private Nodo primero;
-    private Nodo ultimo;
+        private PilaBase entrada;
+        private PilaBase salida;
 
     public Cola() {
-        primero = null;
-        ultimo = null;
+       entrada=new PilaBase();
+       salida=new PilaBase();
     }
 
     public void encolar(int valor) {
