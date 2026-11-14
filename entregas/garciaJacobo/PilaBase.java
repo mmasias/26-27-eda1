@@ -11,4 +11,15 @@ class PilaBase{
         Nodo nuevo=new Nodo(valor,primero);
         primero=nuevo;
     }
+
+    public int desapilar(){
+        assert !this.estaVacia();
+        int valor =primero.getValor();
+        primero=primero.getSiguiente();
+        return valor;
+    }
+
+    public boolean estaVacia() {
+       return primero==null;
+    }
 }
