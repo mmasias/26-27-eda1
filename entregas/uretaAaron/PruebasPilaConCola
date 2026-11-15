@@ -1,0 +1,32 @@
+public class PruebasPilaConCola {
+    public static void main(String[] args) {
+        PilaConCola pila = new PilaConCola();
+
+        pila.apilar(10);
+        pila.apilar(20);
+        pila.apilar(30);
+
+        int primero = pila.desapilar();
+        System.out.println("Sale el primero: " + primero);
+        assert primero == 30;
+
+        pila.apilar(40);
+
+        int segundo = pila.desapilar();
+        System.out.println("Sale el segundo: " + segundo);
+        assert segundo == 40;
+
+        int tercero = pila.desapilar();
+        System.out.println("Sale el tercero: " + tercero);
+        assert tercero == 20;
+
+        assert !pila.estaVacia();
+
+        int cuarto = pila.desapilar();
+        System.out.println("Sale el cuarto: " + cuarto);
+        assert cuarto == 10;
+
+        assert pila.estaVacia();
+        System.out.println("Pruebas correctas, la pila queda vacia.");
+    }
+}
