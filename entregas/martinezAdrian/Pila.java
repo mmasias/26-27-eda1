@@ -1,22 +1,27 @@
 public class Pila {
-    private Nodo cima;
+    private ColaInferior cola;
 
     public Pila() {
-        cima = null;
+        this.cola = new ColaInferior();
     }
 
     public void apilar(int valor) {
-        cima = new Nodo(valor, cima);
+        ColaInferior nueva = new ColaInferior();
+        nueva.encolar(valor);
+
+        while (!cola.estaVacia()) {
+            nueva.encolar(cola.desencolar());
+        }
+
+        cola = nueva;
     }
 
     public int desapilar() {
-        assert !estaVacia();
-        int valor = cima.getValor();
-        cima = cima.getSiguiente();
-        return valor;
+        assert !estaVacia() : "Precondición violada: la pila está vacía";
+        return cola.desencolar();
     }
 
     public boolean estaVacia() {
-        return cima == null;
+        return cola.estaVacia();
     }
 }
