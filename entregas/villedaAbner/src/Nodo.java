@@ -1,6 +1,6 @@
 class Nodo {
-    private int valor;
-    private Nodo siguiente;
+    public int valor;
+    public Nodo siguiente;
 
     public Nodo(int valor, Nodo siguiente) {
         this.valor = valor;
