@@ -1,11 +1,11 @@
 
 public class Pila {
 
-    private Cola cola;
+    private ColaBase cola;
     private int cantidad;
 
     public Pila() {
-        cola = new Cola();
+        cola = new ColaBase();
         cantidad = 0;
     }
 
