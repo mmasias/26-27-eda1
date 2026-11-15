@@ -14,7 +14,6 @@ public class PruebasPila {
         System.out.println("Apilando un 4 para probar las referencias temporales...");
         miPila.apilar(4);
         
-        // 4. Vaciamos la pila por completo
         System.out.println("\nVaciando el resto de la pila (Esperamos 4, luego 2, luego 1):");
         System.out.println("Resultado -> " + miPila.desapilar()); 
         System.out.println("Resultado -> " + miPila.desapilar()); 
