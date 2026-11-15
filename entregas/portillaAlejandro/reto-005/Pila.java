@@ -1,22 +1,34 @@
+
 public class Pila {
-    private Nodo cima;
+
+    private Cola cola;
+    private int cantidad;
 
     public Pila() {
-        cima = null;
+        cola = new Cola();
+        cantidad = 0;
     }
 
     public void apilar(int valor) {
-        cima = new Nodo(valor, cima);
+        assert cantidad < 4;
+
+        cola.encolar(valor);
+
+        for (int i = 0; i < cantidad; i++) {
+            cola.encolar(cola.desencolar());
+        }
+
+        cantidad++;
     }
 
     public int desapilar() {
         assert !estaVacia();
-        int valor = cima.getValor();
-        cima = cima.getSiguiente();
-        return valor;
+
+        cantidad--;
+        return cola.desencolar();
     }
 
     public boolean estaVacia() {
-        return cima == null;
+        return cantidad == 0;
     }
 }
