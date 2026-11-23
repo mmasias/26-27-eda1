@@ -41,3 +41,31 @@ public class Pila {
     }
 }
 ```
+
+## Pila con una cola
+
+Notación: la cola se escribe de frente a final y el frente es la cima de la pila.
+
+<div align=center>
+
+|Cliente|Acción sobre la cola|Cola|tamano|
+|-|-|-|:-:|
+|`apilar(1)`|encolar(1)|[1]|0|
+||(rotar 0 veces) tamano++|[1]|1|
+|`apilar(2)`|encolar(2)|[1, 2]|1|
+||rotar: desencolar 1, encolar 1|[2, 1]|1|
+||tamano++|[2, 1]|2|
+|`apilar(3)`|encolar(3)|[2, 1, 3]|2|
+||rotar: pasa el 2 al final|[1, 3, 2]|2|
+||rotar: pasa el 1 al final|[3, 2, 1]|2|
+||tamano++|[3, 2, 1]|3|
+|`desapilar()`|tamano--, desencolar -> **3**|[2, 1]|2|
+|`apilar(4)`|encolar(4)|[2, 1, 4]|2|
+||rotar dos veces|[4, 2, 1]|2|
+||tamano++|[4, 2, 1]|3|
+|`desapilar()`|tamano--, desencolar -> **4**|[2, 1]|2|
+|`desapilar()`|tamano--, desencolar -> **2**|[1]|1|
+
+</div>
+
+El cliente recibe 3, 4 y 2. Queda el 1 en la pila.

@@ -44,3 +44,31 @@ public class Cola {
     }
 }
 ```
+
+## Cola con dos pilas
+
+Notación: cada pila se escribe de cima a base. En `principal` la cima es el frente de la cola.
+
+<div align=center>
+
+|Cliente|Acción sobre las pilas|principal|auxiliar|
+|-|-|-|-|
+|`encolar(1)`|vaciar principal (nada), apilar 1, devolver (nada)|[1]|[]|
+|`encolar(2)`|vaciar principal en auxiliar|[]|[1]|
+||apilar 2 en principal|[2]|[1]|
+||devolver desde auxiliar|[1, 2]|[]|
+|`encolar(3)`|vaciar principal en auxiliar|[]|[2, 1]|
+||apilar 3 en principal|[3]|[2, 1]|
+||devolver desde auxiliar|[1, 2, 3]|[]|
+|`desencolar()`|desapilar principal -> **1**|[2, 3]|[]|
+|`encolar(4)`|vaciar principal en auxiliar|[]|[3, 2]|
+||apilar 4 en principal|[4]|[3, 2]|
+||devolver desde auxiliar|[2, 3, 4]|[]|
+|`desencolar()`|desapilar principal -> **2**|[3, 4]|[]|
+|`desencolar()`|desapilar principal -> **3**|[4]|[]|
+
+</div>
+
+El cliente recibe 1, 2 y 3. Queda el 4 en la cola.
+
+> *NOTA: tras cada operación completa, `auxiliar` está vacía. Solo contiene elementos en medio de `encolar`*
