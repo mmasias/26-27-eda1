@@ -1,7 +1,7 @@
 # Examen parcial
 
-- [Pila con cola](PILA/README.md)
-- [Cola con pila](COLA/README.md)
+- [Pila con cola](PILA/README.md) - una [propuesta de solución](PILA/propuestaSolucion.md).
+- [Cola con pila](COLA/README.md) - una [propuesta de solución](COLA/propuestaSolucion.md).
 
 ## Entrega
 
