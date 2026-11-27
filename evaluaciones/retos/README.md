@@ -11,6 +11,6 @@ Los retos se irán proponiendo, habitualmente luego de una disertación teórica
 [Reto 003 - Simulación](/evaluaciones/retos/reto003.md)||reto-003
 [Reto 004 - Refactoring de propuesta](/evaluaciones/retos/reto004.md)|Viernes 23|reto-004
 [Reto 005 - Uroboro vII](/evaluaciones/retos/reto005.md)|Lunes 16|reto-005
-
+[Reto 006 - Máquinas expendedoras](evaluaciones/retos/reto006.md)|Miércoles 2|reto-006
 
 </div>
